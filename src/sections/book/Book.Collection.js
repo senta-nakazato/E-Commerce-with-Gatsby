@@ -31,7 +31,6 @@ const booksQuery = graphql`
 const BookCollection = () => {
   const result = useStaticQuery(booksQuery)
   const skus = result.skus.nodes
-  console.log(skus)
 
   function formatPrice(price, currency) {
     let numberFormat = new Intl.NumberFormat(["ja-JP"], {
@@ -55,7 +54,7 @@ const BookCollection = () => {
           <Contents>
             <h4>{sku.attributes.name}</h4>
             <p>{formatPrice(sku.price, sku.currency)}</p>
-            <Checkout sku={sku.id} />
+            <Checkout sku={sku} />
           </Contents>
         </Card>
       ))}

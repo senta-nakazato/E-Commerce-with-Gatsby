@@ -1,17 +1,17 @@
 import React, { useEffect, useState } from "react"
 import styled from "styled-components"
 
-const Checkout = ({ id }) => {
-  const [stripe, setStripe] = useState(
-    window.Stripe("pk_test_1Y4LgFWhiJPEsivDjXsJA8cJ00tdvDj2SX")
-  )
+const Checkout = ({ sku }) => {
+  const [stripe, setStripe] = useState()
 
-  useEffect(() => {}, [])
+  useEffect(() => {
+    setStripe(window.Stripe("pk_test_1Y4LgFWhiJPEsivDjXsJA8cJ00tdvDj2SX"))
+  }, [])
 
-  const redirectToCheckout = async event => {
+  const redirectToCheckout = async (event, sku) => {
     event.preventDefault()
     const error = await stripe.redirectToCheckout({
-      items: [{ sku: `${id}`, quantity: 1 }],
+      items: [{ sku: sku, quantity: 1 }],
       successUrl: `http://localhost:8000/success/`,
       cancelUrl: `http://localhost:8000/`,
     })
@@ -21,12 +21,16 @@ const Checkout = ({ id }) => {
     }
   }
 
-  return <Button onClick={event => redirectToCheckout(event)}>購入する</Button>
+  return (
+    <Button onClick={event => redirectToCheckout(event, sku.id)}>
+      購入する
+    </Button>
+  )
 }
 
 export default Checkout
 
-const Button = styled.div`
+const Button = styled.button`
   text-align: center;
   color: #fff;
   outline: none;
@@ -35,4 +39,9 @@ const Button = styled.div`
   background: rebeccapurple;
   border-radius: 6px;
   letter-spacing: 1.5px;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.8;
+  }
 `
