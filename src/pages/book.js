@@ -2,19 +2,18 @@ import React from "react"
 import { Link } from "gatsby"
 
 import Layout from "@components/layout"
-import Image from "@components/image"
 import SEO from "@components/SEO"
-import Checkout from "@components/Checkout"
 
-const BooksPage = () => (
-  <Layout>
-    <SEO title="Books" />
-    <Checkout />
-    <div style={{ maxWidth: `300px`, marginBottom: `1.45rem` }}>
-      <Image />
-    </div>
-    <Link to="/page-2/">Go to page 2</Link>
-  </Layout>
-)
+import BookCollection from "@sections/book/Book.Collection"
 
-export default BooksPage
+const BookPage = ({ location }) => {
+  return (
+    <Layout location={location}>
+      <SEO title="Books" pathName={location.pathName} />
+      <BookCollection />
+      <Link to="/">Go to Home</Link>
+    </Layout>
+  )
+}
+
+export default BookPage
