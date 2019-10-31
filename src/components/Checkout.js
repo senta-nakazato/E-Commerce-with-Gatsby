@@ -12,8 +12,8 @@ const Checkout = ({ sku }) => {
     event.preventDefault()
     const error = await stripe.redirectToCheckout({
       items: [{ sku: sku, quantity: 1 }],
-      successUrl: `http://localhost:8000/success/`,
-      cancelUrl: `http://localhost:8000/`,
+      successUrl: `https://e-commerce-with-gatsby.netlify.com/success`,
+      cancelUrl: `https://e-commerce-with-gatsby.netlify.com/book`,
     })
 
     if (error) {
