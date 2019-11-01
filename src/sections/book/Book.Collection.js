@@ -4,7 +4,7 @@ import GatsbyImage from "gatsby-image"
 import styled from "styled-components"
 import media from "@styles/media"
 
-import Checkout from "@components/Checkout"
+import Checkout from "@components/Checkout/Checkout"
 
 const booksQuery = graphql`
   query {
