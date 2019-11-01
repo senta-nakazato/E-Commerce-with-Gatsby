@@ -64,9 +64,19 @@ const CheckoutForm = () => {
   // }
 
   return (
-    <form onSubmit={this.handleSubmit} id="form-css" className="w-100">
+    <form className="CheckoutForm" onSubmit={submit}>
+      <h4>Would you like to complete the purchase?</h4>
       <CardElement />
-      <button className="w-100 h4">Pay $50</button>
+      <button
+        className="CheckoutForm-button"
+        type="submit"
+        disabled={status === "submitting"}
+      >
+        {status === "submitting" ? "Submitting" : "Submit Order"}
+      </button>
+      {status === "error" && (
+        <div className="CheckoutForm-error">Something went wrong.</div>
+      )}
     </form>
   )
 }
