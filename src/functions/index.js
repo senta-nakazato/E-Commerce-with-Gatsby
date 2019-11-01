@@ -1,7 +1,7 @@
 require("dotenv").config()
 var stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
 
-module.exports.handler = (event, context, callback) => {
+exports.handler = (event, context, callback) => {
   const requestBody = JSON.parse(event.body)
   const token = requestBody.token.id
   const amount = requestBody.charge.amount
