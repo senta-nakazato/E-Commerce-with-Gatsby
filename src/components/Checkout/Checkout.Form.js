@@ -1,6 +1,5 @@
 import React, { useState } from "react"
 import styled from "styled-components"
-import axios from "axios"
 import {
   CardElement,
   injectStripe,
@@ -9,6 +8,11 @@ import {
   CardCVCElement,
 } from "react-stripe-elements"
 import uuidv1 from "uuid/v1"
+
+const headers = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "Content-Type",
+}
 
 const CheckoutForm = ({ stripe }) => {
   const [status, setStatus] = useState("default")
@@ -21,31 +25,33 @@ const CheckoutForm = ({ stripe }) => {
     event.preventDefault()
 
     try {
-      await stripe
-        .createToken({
-          address_city: city,
-          address_country: "JP",
-          address_zip: "212121",
-        })
-        .then(({ token }) => {
-          const charge = JSON.stringify({
+      let { token } = await stripe.createToken({
+        address_city: city,
+        address_country: "JP",
+        address_zip: "212121",
+      })
+      console.log("token", token)
+
+      await fetch(
+        "https://e-commerce-with-gatsby.netlify.com/.netlify/functions/index",
+        {
+          method: "POST",
+          body: JSON.stringify({
             token,
-            charge: {
-              amount: Math.floor(5000),
-              currency: "jpy",
-              email: email,
-              idempotency: uuidv1(),
-            },
-          })
-          axios
-            .post(
-              "https://e-commerce-with-gatsby.netlify.com/.netlify/functions/index",
-              charge
-            )
-            .catch(function(error) {
-              console.log(error)
-            })
-        })
+            email: email,
+            amount: Math.floor(5000),
+            idempotency: uuidv1(),
+          }),
+          headers,
+        }
+      ).then(response => {
+        if (response === 200) {
+          setStatus("complete")
+        } else {
+          response.text().then(text => console.log(text))
+          throw new Error("Network response was not ok.")
+        }
+      })
     } catch (error) {
       setStatus("error")
       console.log(error)
