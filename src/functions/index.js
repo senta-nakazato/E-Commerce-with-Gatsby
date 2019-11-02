@@ -59,6 +59,7 @@ exports.handler = async (event, callback) => {
               receipt_email: data.email,
               customer: customer.id,
               description: "Sample Charge",
+              source: data.token.id,
             },
             {
               idempotency_key: data.idempotency,
