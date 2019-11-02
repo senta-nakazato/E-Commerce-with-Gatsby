@@ -32,7 +32,7 @@ const CheckoutForm = ({ stripe }) => {
         {
           method: "POST",
           body: JSON.stringify({
-            token,
+            ...token,
             email: email,
             amount: Math.floor(5000),
             idempotency: uuidv1(),
