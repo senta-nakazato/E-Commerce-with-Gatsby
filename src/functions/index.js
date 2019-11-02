@@ -42,70 +42,43 @@ exports.handler = async (event, callback) => {
   }
 
   try {
-    await tripe.charges
-      .create(
-        {
-          currency: "jpy",
-          amount: data.amount,
-          receipt_email: data.email,
-          source: data.token.id,
-          description: "Sample Charge",
-        },
-        {
-          idempotency_key: data.idempotency,
-        }
-      )
-      .then(result => {
-        console.log(`Charge created: ${result}`)
+    await stripe.customers
+      .create({
+        email: data.email,
+        source: data.token,
       })
-      .then(charge => {
-        const response = {
-          statusCode: 200,
-          headers,
-          body: JSON.stringify({
-            message: `Charge processed succesfully!`,
-            charge,
-          }),
-        }
-        callback(null, response)
+      .then(customer => {
+        console.log(
+          `starting the charges, amount: ${data.amount}, email: ${data.email}`
+        )
+        return stripe.charges
+          .create(
+            {
+              currency: "jpy",
+              amount: data.amount,
+              receipt_email: data.email,
+              customer: customer.id,
+              description: "Sample Charge",
+            },
+            {
+              idempotency_key: data.idempotency,
+            }
+          )
+          .then(result => {
+            console.log(`Charge created: ${result}`)
+          })
+          .then(charge => {
+            const response = {
+              statusCode: 200,
+              headers,
+              body: JSON.stringify({
+                message: `Charge processed succesfully!`,
+                charge,
+              }),
+            }
+            callback(null, response)
+          })
       })
-    // await stripe.customers
-    //   .create({
-    //     email: data.email,
-    //     source: data.token,
-    //   })
-    //   .then(customer => {
-    //     console.log(
-    //       `starting the charges, amount: ${data.amount}, email: ${data.email}`
-    //     )
-    //     return stripe.charges
-    //       .create(
-    //         {
-    //           currency: "jpy",
-    //           amount: data.amount,
-    //           receipt_email: data.email,
-    //           customer: customer.id,
-    //           description: "Sample Charge",
-    //         },
-    //         {
-    //           idempotency_key: data.idempotency,
-    //         }
-    //       )
-    //       .then(result => {
-    //         console.log(`Charge created: ${result}`)
-    //       })
-    //       .then(charge => {
-    //         const response = {
-    //           statusCode: 200,
-    //           headers,
-    //           body: JSON.stringify({
-    //             message: `Charge processed succesfully!`,
-    //             charge,
-    //           }),
-    //         }
-    //         callback(null, response)
-    //       })
-    //   })
   } catch (error) {
     console.log(error)
 
