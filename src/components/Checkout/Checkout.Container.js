@@ -16,6 +16,7 @@ const CheckoutContainer = () => {
       })
     }
   }, [])
+
   return (
     <StripeProvider stripe={stripe}>
       <Elements>

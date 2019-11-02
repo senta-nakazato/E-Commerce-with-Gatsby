@@ -31,19 +31,12 @@ const CheckoutForm = ({ stripe }) => {
         "https://e-commerce-with-gatsby.netlify.com/.netlify/functions/index",
         {
           method: "POST",
-          body: JSON.stringify(
-            {
-              token,
-              email: email,
-              amount: Math.floor(5000),
-              idempotency: uuidv1(),
-            },
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          ),
+          body: JSON.stringify({
+            token,
+            email: email,
+            amount: Math.floor(5000),
+            idempotency: uuidv1(),
+          }),
         }
       ).then(response => {
         if (response === 200) {
