@@ -44,18 +44,14 @@ const CheckoutForm = ({ stripe }) => {
             idempotency: uuidv1(),
           }),
         }
-      )
-        .catch(e => {
-          throw new Error(e)
-        })
-        .then(response => {
-          if (response === 200) {
-            setStatus("complete")
-          } else {
-            response.text().then(text => console.log(text))
-            throw new Error("Network response was not ok.")
-          }
-        })
+      ).then(response => {
+        if (response === 200) {
+          setStatus("complete")
+        } else {
+          response.text().then(text => console.log(text))
+          throw new Error("Network response was not ok.")
+        }
+      })
     } catch (error) {
       setStatus("error")
       console.log(error)
