@@ -9,11 +9,6 @@ import {
 } from "react-stripe-elements"
 import uuidv1 from "uuid/v1"
 
-const headers = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "Content-Type",
-}
-
 const CheckoutForm = ({ stripe }) => {
   const [status, setStatus] = useState("default")
   const [email, setEmail] = useState("")
@@ -32,9 +27,15 @@ const CheckoutForm = ({ stripe }) => {
       })
       console.log("token", token)
 
+      const headers = {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Headers": "Content-Type",
+      }
+
       await fetch(
         "https://e-commerce-with-gatsby.netlify.com/.netlify/functions/index",
         {
+          headers,
           method: "POST",
           body: JSON.stringify({
             token,
@@ -42,7 +43,6 @@ const CheckoutForm = ({ stripe }) => {
             amount: Math.floor(5000),
             idempotency: uuidv1(),
           }),
-          headers,
         }
       )
         .catch(e => {
