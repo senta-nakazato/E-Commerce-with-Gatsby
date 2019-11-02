@@ -26,7 +26,8 @@
     "react-dom": "^16.11.0",
     "react-helmet": "^5.2.1",
     "react-stripe-elements": "^5.1.0",
-    "styled-components": "^4.4.0"
+    "styled-components": "^4.4.0",
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
     "prettier": "^1.18.2"

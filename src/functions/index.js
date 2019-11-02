@@ -1,51 +1,94 @@
-exports.handler = async (event, context) => {
-  return {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: "Hi there Tacos",
-      event,
-    }),
-  }
+// exports.handler = async (event, context) => {
+//   return {
+//     statusCode: 200,
+//     body: JSON.stringify({
+//       message: "Hi there Tacos",
+//       event,
+//     }),
+//   }
+// }
+
+require("dotenv").config()
+let stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
+
+const headers = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "Content-Type",
 }
 
-// require("dotenv").config()
-// var stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
+exports.handler = (event, callback) => {
+  console.log('event', event.body)
+  if (!event.body || event.httpMethod !== "POST") {
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({
+        status: "invalid http method",
+      }),
+    }
+  }
 
-// exports.handler = (event, context, callback) => {
-//   const requestBody = JSON.parse(event.body)
-//   const token = requestBody.token.id
-//   const amount = requestBody.charge.amount
-//   const currency = requestBody.charge.currency
-//   const email = requestBody.charge.email
+  const data = JSON.parse(event.body)
 
-//   return stripe.charges
-//     .create({
-//       // Create Stripe charge with token
-//       amount,
-//       currency,
-//       receipt_email: email,
-//       description: "Serverless Stripe Test charge",
-//       source: token,
-//     })
-//     .then(charge => {
-//       // Success response
-//       const response = {
-//         statusCode: 200,
-//         body: JSON.stringify({
-//           message: `Charge processed succesfully!`,
-//           charge,
-//         }),
-//       }
-//       callback(null, response)
-//     })
-//     .catch(err => {
-//       // Error response
-//       const response = {
-//         statusCode: 500,
-//         body: JSON.stringify({
-//           error: err.message,
-//         }),
-//       }
-//       callback(null, response)
-//     })
-// }
+  if (!data.token || !data.amount || !data.idempotency) {
+    console.error("Required information is missing.")
+
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({
+        status: "missing information",
+      }),
+    }
+  }
+
+  try {
+    await stripe.customers
+      .create({
+        email: data.email,
+        source: data.token
+      })
+      .then(customer => {
+        console.log(
+          `starting the charges, amount: ${data.amount}, email: ${data.email}`
+        )
+        return stripe.charges
+          .create(
+            {
+              currency: "jpy",
+              amount: data.amount,
+              receipt_email: data.email,
+              customer: customer.id,
+              description: "Sample Charge"
+            },
+            {
+              idempotency_key: data.idempotency
+            }
+          )
+          .then(result => {
+            console.log(`Charge created: ${result}`)
+          })
+          .then(charge => {
+            const response = {
+              statusCode: 200,
+              headers,
+              body: JSON.stringify({
+                message: `Charge processed succesfully!`,
+                charge,
+              }),
+            }
+            callback(null, response)
+          })
+      })     
+  } catch (error) {
+    console.log(error)
+
+    return {
+      statusCode: 400,
+      headers,
+      body: JSON.stringify({
+        status: error,
+      }),
+    }
+  }
+}
