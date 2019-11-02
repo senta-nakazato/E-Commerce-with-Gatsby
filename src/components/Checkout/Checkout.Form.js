@@ -28,21 +28,22 @@ const CheckoutForm = ({ stripe }) => {
       console.log("token", token)
 
       const headers = {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Headers": "Content-Type",
+        "Content-Type": "application/json",
       }
 
       await fetch(
         "https://e-commerce-with-gatsby.netlify.com/.netlify/functions/index",
         {
-          headers,
           method: "POST",
-          body: JSON.stringify({
-            token,
-            email: email,
-            amount: Math.floor(5000),
-            idempotency: uuidv1(),
-          }),
+          body: JSON.stringify(
+            {
+              token,
+              email: email,
+              amount: Math.floor(5000),
+              idempotency: uuidv1(),
+            },
+            headers
+          ),
         }
       ).then(response => {
         if (response === 200) {
