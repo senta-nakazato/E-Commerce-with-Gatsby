@@ -12,6 +12,7 @@ require("dotenv").config()
 let stripe = require("stripe")(process.env.STRIPE_SECRET_KEY)
 
 const headers = {
+  Accept: "application/json",
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "Content-Type",
 }
@@ -45,7 +46,7 @@ exports.handler = async (event, callback) => {
     await stripe.customers
       .create({
         email: data.email,
-        source: data.token,
+        source: data.token.id,
       })
       .then(customer => {
         console.log(
@@ -59,6 +60,7 @@ exports.handler = async (event, callback) => {
               receipt_email: data.email,
               customer: customer.id,
               description: "Sample Charge",
+              source: data.token.id,
             },
             {
               idempotency_key: data.idempotency,
