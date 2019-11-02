@@ -45,7 +45,7 @@ exports.handler = async (event, callback) => {
     await stripe.customers
       .create({
         email: data.email,
-        source: data.token,
+        source: data.token.id,
       })
       .then(customer => {
         console.log(
