@@ -16,8 +16,8 @@ const headers = {
   "Access-Control-Allow-Headers": "Content-Type",
 }
 
-exports.handler = (event, callback) => {
-  console.log('event', event.body)
+exports.handler = async (event, callback) => {
+  console.log("event", event.body)
   if (!event.body || event.httpMethod !== "POST") {
     return {
       statusCode: 400,
@@ -46,7 +46,7 @@ exports.handler = (event, callback) => {
     await stripe.customers
       .create({
         email: data.email,
-        source: data.token
+        source: data.token,
       })
       .then(customer => {
         console.log(
@@ -59,10 +59,10 @@ exports.handler = (event, callback) => {
               amount: data.amount,
               receipt_email: data.email,
               customer: customer.id,
-              description: "Sample Charge"
+              description: "Sample Charge",
             },
             {
-              idempotency_key: data.idempotency
+              idempotency_key: data.idempotency,
             }
           )
           .then(result => {
@@ -79,7 +79,7 @@ exports.handler = (event, callback) => {
             }
             callback(null, response)
           })
-      })     
+      })
   } catch (error) {
     console.log(error)
 
