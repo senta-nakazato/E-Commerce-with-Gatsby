@@ -45,7 +45,7 @@ exports.handler = async (event, callback) => {
     await stripe.customers
       .create({
         email: data.email,
-        source: data.token.id,
+        source: data.token,
       })
       .then(customer => {
         console.log(
@@ -59,7 +59,6 @@ exports.handler = async (event, callback) => {
               receipt_email: data.email,
               customer: customer.id,
               description: "Sample Charge",
-              source: data.token.id,
             },
             {
               idempotency_key: data.idempotency,
