@@ -29,7 +29,7 @@ exports.handler = async (event, callback) => {
 
   const data = JSON.parse(event.body)
 
-  if (!data.amount || !data.idempotency) {
+  if (!data.token.id || !data.charge.amount || !data.charge.idempotency) {
     console.log("event", event.body)
 
     console.error("Required information is missing.")
@@ -46,24 +46,24 @@ exports.handler = async (event, callback) => {
   try {
     await stripe.customers
       .create({
-        email: data.email,
-        source: data.token,
+        email: data.charge.email,
+        source: data.token.id,
       })
       .then(customer => {
         console.log(
-          `starting the charges, amount: ${data.amount}, email: ${data.email}`
+          `starting the charges, amount: ${data.charge.amount}, email: ${data.charge.email}`
         )
         return stripe.charges
           .create(
             {
               currency: "jpy",
-              amount: data.amount,
-              receipt_email: data.email,
+              amount: data.charge.amount,
+              receipt_email: data.charge.email,
               customer: customer.id,
               description: "Sample Charge",
             },
             {
-              idempotency_key: data.idempotency,
+              idempotency_key: data.charge.idempotency,
             }
           )
           .then(result => {

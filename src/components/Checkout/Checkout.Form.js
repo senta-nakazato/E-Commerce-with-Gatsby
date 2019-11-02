@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import styled from "styled-components"
+import axios from "axios"
 import {
   CardElement,
   injectStripe,
@@ -20,32 +21,31 @@ const CheckoutForm = ({ stripe }) => {
     event.preventDefault()
 
     try {
-      let { token } = await stripe.createToken({
-        address_city: city,
-        address_country: "JP",
-        address_zip: "212121",
-      })
-      console.log("token", token)
-
-      await fetch(
-        "https://e-commerce-with-gatsby.netlify.com/.netlify/functions/index",
-        {
-          method: "POST",
-          body: JSON.stringify({
-            ...token,
-            email: email,
-            amount: Math.floor(5000),
-            idempotency: uuidv1(),
-          }),
-        }
-      ).then(response => {
-        if (response === 200) {
-          setStatus("complete")
-        } else {
-          console.log(response.json())
-          throw new Error(`Network response was not ok. + ${response.json()}`)
-        }
-      })
+      await stripe
+        .createToken({
+          address_city: city,
+          address_country: "JP",
+          address_zip: "212121",
+        })
+        .then(({ token }) => {
+          const charge = JSON.stringify({
+            token,
+            charge: {
+              amount: Math.floor(5000),
+              currency: "jpy",
+              email: email,
+              idempotency: uuidv1(),
+            },
+          })
+          axios
+            .post(
+              "https://e-commerce-with-gatsby.netlify.com/.netlify/functions/index",
+              charge
+            )
+            .catch(function(error) {
+              console.log(error)
+            })
+        })
     } catch (error) {
       setStatus("error")
       console.log(error)
