@@ -17,7 +17,6 @@ const headers = {
 }
 
 exports.handler = async (event, callback) => {
-  console.log("event", event.body)
   if (!event.body || event.httpMethod !== "POST") {
     return {
       statusCode: 400,
@@ -31,6 +30,8 @@ exports.handler = async (event, callback) => {
   const data = JSON.parse(event.body)
 
   if (!data.token || !data.amount || !data.idempotency) {
+    console.log("event", event.body)
+
     console.error("Required information is missing.")
 
     return {
