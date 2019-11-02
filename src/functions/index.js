@@ -64,6 +64,9 @@ exports.handler = async (event, callback) => {
               idempotency_key: data.idempotency,
             }
           )
+          .catch(e => {
+            throw Error(e)
+          })
           .then(result => {
             console.log(`Charge created: ${result}`)
           })
