@@ -29,7 +29,7 @@ exports.handler = async (event, callback) => {
 
   const data = JSON.parse(event.body)
 
-  if (!data.token || !data.amount || !data.idempotency) {
+  if (!data.amount || !data.idempotency) {
     console.log("event", event.body)
 
     console.error("Required information is missing.")

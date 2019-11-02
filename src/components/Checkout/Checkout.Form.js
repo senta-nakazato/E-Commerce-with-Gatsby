@@ -42,7 +42,8 @@ const CheckoutForm = ({ stripe }) => {
         if (response === 200) {
           setStatus("complete")
         } else {
-          throw new Error("Network response was not ok.")
+          console.log(response.json())
+          throw new Error(`Network response was not ok. + ${response.json()}`)
         }
       })
     } catch (error) {
