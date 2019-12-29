@@ -32,8 +32,7 @@ const CheckoutForm = ({ stripe }) => {
       }
 
       await fetch(
-        "/.netlify/functions/charge",
-        // "https://e-commerce-with-gatsby.netlify.com/.netlify/functions/charge",
+        "https://e-commerce-with-gatsby.netlify.com/.netlify/functions/charge",
         {
           method: "POST",
           body: JSON.stringify(
