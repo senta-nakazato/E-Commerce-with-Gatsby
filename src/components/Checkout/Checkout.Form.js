@@ -32,7 +32,8 @@ const CheckoutForm = ({ stripe }) => {
       }
 
       await fetch(
-        "https://e-commerce-with-gatsby.netlify.com/.netlify/functions/index",
+        "/.netlify/functions/charge",
+        // "https://e-commerce-with-gatsby.netlify.com/.netlify/functions/charge",
         {
           method: "POST",
           body: JSON.stringify(
@@ -40,6 +41,7 @@ const CheckoutForm = ({ stripe }) => {
               token,
               email: email,
               amount: Math.floor(5000),
+              token: "tok_visa",
               idempotency: uuidv1(),
             },
             headers
@@ -88,6 +90,7 @@ const CheckoutForm = ({ stripe }) => {
         className="CheckoutForm-button"
         type="submit"
         disabled={status === "submitting"}
+        onClick={() => handleSubmit}
       >
         {status === "submitting" ? "Submitting" : "Submit Order"}
       </button>

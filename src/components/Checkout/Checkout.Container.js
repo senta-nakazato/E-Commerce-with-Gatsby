@@ -9,10 +9,10 @@ const CheckoutContainer = () => {
 
   useEffect(() => {
     if (window.Stripe) {
-      setStripe(window.Stripe("pk_test_1Y4LgFWhiJPEsivDjXsJA8cJ00tdvDj2SX"))
+      setStripe(window.Stripe(process.env.GATSBY_STRIPE_TEST_KEY))
     } else {
       document.querySelector("#stripe-js").addEventListener("load", () => {
-        setStripe(window.Stripe("pk_test_1Y4LgFWhiJPEsivDjXsJA8cJ00tdvDj2SX"))
+        setStripe(window.Stripe(process.env.GATSBY_STRIPE_TEST_KEY))
       })
     }
   }, [])

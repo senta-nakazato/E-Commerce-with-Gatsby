@@ -96,6 +96,7 @@ const SEO = ({
       meta={metaTags}
     >
       {children}
+      <script src="https://js.stripe.com/v3/" />
     </Helmet>
   )
 }
