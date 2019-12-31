@@ -18,7 +18,7 @@ const CheckoutContainer = () => {
   }, [])
 
   return (
-    <StripeProvider apiKey={process.env.GATSBY_STRIPE_TEST_KEY}>
+    <StripeProvider stripe={stripe}>
       <Elements>
         <CheckoutForm />
       </Elements>
