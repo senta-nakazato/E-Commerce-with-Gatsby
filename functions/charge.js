@@ -7,6 +7,7 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY),
   }
 
 module.exports.handler = async (event, context) => {
+  console.log("Charge function is working")
   if (!event.body || event.httpMethod !== "POST") {
     return {
       statusCode: 400,

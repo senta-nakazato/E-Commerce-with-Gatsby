@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react"
 import { Elements, StripeProvider } from "react-stripe-elements"
 
 import CheckoutForm from "@components/Checkout/Checkout.Form"
-import StripeHookProvider from "@components/Checkout/StripeHookProvider"
+// import StripeHookProvider from "@components/Checkout/StripeHookProvider"
 
 const CheckoutContainer = () => {
   const [stripe, setStripe] = useState(null)
@@ -18,11 +18,9 @@ const CheckoutContainer = () => {
   }, [])
 
   return (
-    <StripeProvider stripe={stripe}>
+    <StripeProvider apiKey={process.env.GATSBY_STRIPE_TEST_KEY}>
       <Elements>
-        <StripeHookProvider>
-          <CheckoutForm />
-        </StripeHookProvider>
+        <CheckoutForm />
       </Elements>
     </StripeProvider>
   )

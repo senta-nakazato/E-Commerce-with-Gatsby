@@ -6,13 +6,15 @@ import SEO from "@components/SEO"
 import CheckoutContainer from "@components/Checkout/Checkout.Container"
 
 import BookCollection from "@sections/book/Book.Collection"
+import StripeForm from "@components/Checkout/StripeForm"
 
 const BookPage = ({ location }) => {
   return (
     <Layout location={location}>
       <SEO title="Books" pathName={location.pathName} />
       <CheckoutContainer />
-      <BookCollection />
+      {/* <StripeForm /> */}
+      {/* <BookCollection /> */}
       <Link to="/">Go to Home</Link>
     </Layout>
   )
