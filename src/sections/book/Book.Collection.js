@@ -1,7 +1,7 @@
 import React from "react"
 import { graphql, useStaticQuery } from "gatsby"
 import GatsbyImage from "gatsby-image"
-import styled from "styled-components"
+import styled from "@emotion/styled"
 import media from "@styles/media"
 
 import Checkout from "@components/Checkout/Checkout"
@@ -68,12 +68,6 @@ const Frame = styled.div`
   display: flex;
   width: 100%;
   justify-content: space-between;
-
-  ${media.desktop} {
-    flex-direction: column;
-    align-items: center;
-    margin: 0 auto;
-  }
 `
 
 const Card = styled.div`
@@ -83,10 +77,6 @@ const Card = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  ${media.desktop} {
-    margin-bottom: 24px;
-  }
 `
 
 const ImageContainer = styled.div`

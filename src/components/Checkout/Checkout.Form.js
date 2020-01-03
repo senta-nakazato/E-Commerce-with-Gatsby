@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
-import styled, { css } from "styled-components"
+import { css } from "@emotion/core"
+import styled from "@emotion/styled"
 import {
   CardElement,
   injectStripe,
@@ -381,10 +382,6 @@ const Container = styled.div`
     background: white;
 
     font-size: 2rem !important;
-
-    ${media.phablet} {
-      font-size: 4rem !important;
-    }
   }
 
   input::placeholder {

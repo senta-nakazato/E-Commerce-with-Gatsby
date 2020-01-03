@@ -1,6 +1,6 @@
 import React from "react"
 import { GatsbyImage } from "gatsby-image"
-import styled from "styled-components"
+import styled from "@emotion/styled"
 
 const Card = ({ children }) => {
   return (

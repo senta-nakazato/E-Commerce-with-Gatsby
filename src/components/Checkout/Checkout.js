@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import styled from "styled-components"
+import styled from "@emotion/styled"
 
 const Checkout = ({ sku }) => {
   const [stripe, setStripe] = useState()

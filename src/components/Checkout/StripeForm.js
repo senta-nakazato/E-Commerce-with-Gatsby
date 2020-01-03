@@ -1,5 +1,6 @@
 import React, { useEffect } from "react"
-import styled, { css } from "styled-components"
+import { css } from "@emotion/core"
+import styled from "@emotion/styled"
 
 const StripeForm = () => {
   useEffect(() => {

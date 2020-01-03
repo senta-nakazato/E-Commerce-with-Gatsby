@@ -1,44 +1,39 @@
-/*
+import { css } from "@emotion/core"
 
-https://hashimotosan.hatenablog.jp/entry/2019/05/28/164834
+import theme from "../gatsby-plugin-theme-ui"
 
-SmartPhone - 320〜559px
-Tablet-  560〜959px
-PC - more than 960px
+const toEm = size => size / 16 + "em"
 
-Break Points
-560px/960px
+/**
+ * All breakpoints can be found inside of theme.breakpoints.
+ * Each is turned in to a min + 1 and max-width version.
+ *
+ * There are also break points to cover coarse and fine pointer devices
+ *
+ * @example
+ *
+ *    ${mediaqueries.phone` width: 100px; `};
+ *    ${mediaqueries.tablet_up` width: 200px; `};
+ */
 
-*/
-
-// const screenSizes = {
-//   xsm: "480px",
-//   sm: " 760",
-//   md: "992px",
-//   lg: "1200px",
-//   xlg: "1500px",
-// }
-
-const breakpoints = {
-  phone_small: "320px",
-  phone: "376px",
-  phablet: "540",
-  tablet: "735px",
-  desktop: "1070px",
-  desktop_medium: "1280px",
-  desktop_large: "1440px",
-}
-
-const media = {
-  phone_small: `@media screen and (max-width: ${breakpoints.phone_small})`,
-  phone: `@media screen and (max-width: ${breakpoints.phone})`,
-  phablet: `@media screen and (max-width: ${breakpoints.phablet})`,
-  tablet: `@media screen and (max-width: ${breakpoints.tablet})`,
-  desktop: `@media screen and (max-width: ${breakpoints.desktop})`,
-  desktop_medium: `@media screen and (max-width: ${breakpoints.desktop_medium})`,
-  desktop_large: `@media screen and (max-width: ${breakpoints.desktop_large})`,
-  tablet_up: `@media screen and (min-width: ${breakpoints.tablet + 1})`,
-  desktop_up: `@media screen and (min-width: ${breakpoints.desktop + 1})`,
-}
+const media = theme.breakpoints.reduce(
+  (acc, [label, size], i) => ({
+    ...acc,
+    // max-width media query e.g. mediaqueries.desktop
+    [label]: (...args) => css`
+      @media (max-width: ${toEm(size)}) {
+        ${css(...args)};
+      }
+    `,
+    // min-width media query e.g. mediaqueries.desktop_up
+    // This is the breakpoint prior's size +1
+    [`${label}_up`]: (...args) => css`
+      @media (min-width: ${toEm(theme.breakpoints[i - 1][1] + 1)}) {
+        ${css(...args)};
+      }
+    `,
+  }),
+  {}
+)
 
 export default media
