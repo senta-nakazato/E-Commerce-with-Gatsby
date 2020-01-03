@@ -6,8 +6,9 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY),
     "Access-Control-Allow-Headers": "Content-Type",
   }
 
-module.exports.handler = async (event, context) => {
-  console.log("Charge function is working")
+exports.handler = async (event, context) => {
+  console.log("event", event)
+
   if (!event.body || event.httpMethod !== "POST") {
     return {
       statusCode: 400,

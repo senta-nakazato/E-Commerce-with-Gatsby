@@ -11,6 +11,8 @@ import {
 import uuidv1 from "uuid/v1"
 import media from "@styles/media"
 
+const axios = require("axios")
+
 const CheckoutForm = ({ stripe }) => {
   const [address, setAddress] = useState("default")
   const [city, setCity] = useState("")
@@ -95,31 +97,30 @@ const CheckoutForm = ({ stripe }) => {
         "Content-Type": "application/json",
       }
 
-      await fetch(
-        "https://e-commerce-with-gatsby.netlify.com/.netlify/functions/charge",
-        {
-          method: "POST",
-          body: JSON.stringify(
-            {
-              token,
-              name: name,
-              email: email,
-              amount: Math.floor(5000),
-              token: "tok_visa",
-              idempotency: uuidv1(),
-            },
-            headers
-          ),
-        }
-      ).then(response => {
-        if (response === 200) {
-          setStatus("complete")
-          console.log("Purchase Complete!")
-        } else {
-          response.text().then(text => console.log(text))
-          throw new Error("Network response was not ok.")
-        }
-      })
+      await axios
+        .post(
+          "https://e-commerce-with-gatsby.netlify.com/.netlify/functions/checkout",
+          {
+            token,
+            name: name,
+            email: email,
+            amount: Math.floor(5000),
+            token: "tok_visa",
+            idempotency: uuidv1(),
+          },
+          headers
+        )
+        .then(response => {
+          console.log("response", response)
+
+          if (response === 200) {
+            setStatus("complete")
+            console.log("Purchase Complete!")
+          } else {
+            response.text().then(text => console.log(text))
+            throw new Error("Network response was not ok.")
+          }
+        })
     } catch (error) {
       setStatus("error")
       console.log(error)
@@ -128,7 +129,7 @@ const CheckoutForm = ({ stripe }) => {
 
   return (
     <Container>
-      <Form onSubmit={() => handleSubmit}>
+      <Form>
         <h4>Would you like to complete the purchase?</h4>
         <Field>
           <Row>
@@ -184,7 +185,11 @@ const CheckoutForm = ({ stripe }) => {
           </Row>
         </Field>
 
-        <Button type="submit" disabled={status === "submitting"}>
+        <Button
+          type="submit"
+          disabled={status === "submitting"}
+          onClick={() => handleSubmit}
+        >
           {status === "submitting" ? "Submitting" : "Submit Order"} $25
         </Button>
       </Form>
