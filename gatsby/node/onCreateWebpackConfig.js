@@ -2,7 +2,19 @@
 
 const path = require("path")
 
-module.exports = ({ actions, getConfig, stage }) => {
+module.exports = ({ actions, stage, loaders }) => {
+  if (stage === "build-html") {
+    actions.setWebpackConfig({
+      module: {
+        rules: [
+          {
+            test: /bad-module/,
+            use: loaders.null(),
+          },
+        ],
+      },
+    })
+  }
   actions.setWebpackConfig({
     resolve: {
       alias: {
