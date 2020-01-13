@@ -99,7 +99,7 @@ const CheckoutForm = ({ stripe }) => {
 
       await axios
         .post(
-          "http://localhost:8888/.netlify/functions/checkout",
+          "https://e-commerce-with-gatsby.netlify.com/.netlify/functions/checkout",
           JSON.stringify({
             token,
             name: name,
