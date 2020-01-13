@@ -1,11 +1,14 @@
 export default {
-  primary: "rgb(69, 42, 70)",
+  primary: "#452a46", // rgb(69, 42, 70)
   secondary: "#73737D",
   border: "#7c7a7d",
   borderLight: "#e0e0e0",
   button: "rgb(69, 42, 70)",
+  font: "#2F2F2F",
+
   grey: "#73737D",
-  background: "#fafafa",
+  background: "rgb(255, 255, 255)",
+  backgroundGrey: "#fafafa",
   accent: "#6166DC",
   heading: "black",
   hover: "rgba(0, 0, 0, 0.07)",

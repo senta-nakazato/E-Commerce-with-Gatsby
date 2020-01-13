@@ -2,20 +2,24 @@ import React from "react"
 import { Link } from "gatsby"
 
 import Layout from "@components/layout"
-import Image from "@components/image"
+
 import SEO from "@components/SEO"
 
-const IndexPage = () => (
-  <Layout>
-    <SEO title="Home" />
-    <h1>Hi people</h1>
-    <p>Welcome to your new Gatsby site.</p>
-    <p>Now go build something great.</p>
-    <div style={{ maxWidth: `300px`, marginBottom: `1.45rem` }}>
-      <Image />
-    </div>
-    <Link to="/book">book page</Link>
-  </Layout>
-)
+import HomeHero from "@sections/home/Home.Hero"
+import HomeContent from "@sections/home/Home.Content"
+import HomeCTA from "@sections/home/Home.CTA"
+import OurStory from "@sections/OurStory"
+
+const IndexPage = () => {
+  return (
+    <Layout>
+      <SEO title="Home" />
+      <HomeHero />
+      <HomeContent />
+      <HomeCTA />
+      <OurStory />
+    </Layout>
+  )
+}
 
 export default IndexPage

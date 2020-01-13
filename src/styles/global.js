@@ -1,4 +1,4 @@
-import { css } from "@emotion/core";
+import { css } from "@emotion/core"
 
 export const globalStyles = css`
   /**
@@ -44,6 +44,7 @@ export const globalStyles = css`
   }
 
   body {
+    color: #2f2f2f;
     font-family: "-apple-system", "BlinkMacSystemFont", "San Francisco",
       "Helvetica Neue", "Helvetica", "Ubuntu", "Roboto", "Noto", "Segoe UI",
       "Arial", sans-serif;
@@ -57,6 +58,7 @@ export const globalStyles = css`
   a {
     text-decoration: none;
     cursor: pointer;
+    color: currentColor;
   }
 
   a:focus {
@@ -71,6 +73,11 @@ export const globalStyles = css`
   video {
     vertical-align: middle;
     align-self: center;
+  }
+
+  ul,
+  li {
+    list-style: none;
   }
 
   input,
@@ -138,4 +145,4 @@ export const globalStyles = css`
   img.Image__Zoom ~ div {
     background: transparent !important;
   }
-`;
+`

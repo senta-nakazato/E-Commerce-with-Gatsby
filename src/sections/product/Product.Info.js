@@ -3,30 +3,12 @@ import React, { useState } from "react"
 import { css } from "@emotion/core"
 import styled from "@emotion/styled"
 import media from "@styles/media"
+import { formatPrice } from "@utils/index"
 
+import ColorVariants from "@components/ColorVarients"
 import Action from "./Product.Action"
 
 const ProductInfo = ({ product }) => {
-  const [currentColor, setCurrentColor] = useState(0)
-  const [hoverColor, setHoverColor] = useState(null)
-
-  function handleColorName() {
-    if (hoverColor !== null) {
-      return product.colors[hoverColor].name
-    } else {
-      return product.colors[currentColor].name
-    }
-  }
-
-  function formatPrice(price, currency = "JPY") {
-    let numberFormat = new Intl.NumberFormat(["ja-JP"], {
-      style: "currency",
-      currency: currency,
-      currencyDisplay: "symbol",
-    })
-    return numberFormat.format(price)
-  }
-
   return (
     <Section>
       <Header>
@@ -34,24 +16,13 @@ const ProductInfo = ({ product }) => {
         <Price>{formatPrice(product.price)}</Price>
       </Header>
       <Description>{product.description.description}</Description>
-      <Heading>Color</Heading>
       {product.colors && (
         <>
-          <ColorName>{handleColorName()}</ColorName>
-          <ColorVariants>
-            {product.colors.map((color, index) => (
-              <Color
-                hex={color.hex}
-                onMouseEnter={() => setHoverColor(index)}
-                onMouseLeave={() => setHoverColor(null)}
-                onClick={() => setCurrentColor(index)}
-                show={index === currentColor}
-              />
-            ))}
-          </ColorVariants>
+          <Heading>Color</Heading>
+          <ColorVariants product={product} withName />
         </>
       )}
-      <Action />
+      <Action product={product} />
     </Section>
   )
 }
@@ -88,39 +59,4 @@ const Heading = styled.h3`
   ${p => p.theme.styles.h3};
   color: ${p => p.theme.colors.heading};
   margin-bottom: 12px;
-`
-
-const ColorVariants = styled.div`
-  display: flex;
-  margin-bottom: 4rem;
-`
-
-const ColorName = styled.p`
-  margin-bottom: 8px;
-`
-
-const Color = styled.div`
-  background: ${p => p.hex};
-  width: 2rem;
-  height: 2rem;
-  border-radius: 100%;
-
-  margin-right: 12px;
-  position: relative;
-  cursor: pointer;
-
-  &:after {
-    display: block;
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    height: 2.8rem;
-    width: 2.8rem;
-    background: transparent;
-    border-radius: 100%;
-
-    ${p => (p.show ? `border: 2px solid red;` : `border: none;`)};
-  }
 `

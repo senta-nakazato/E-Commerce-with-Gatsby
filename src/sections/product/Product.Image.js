@@ -19,6 +19,7 @@ const ProductImage = ({ images }) => {
       <Thumbnail>
         {images.map((image, index) => (
           <ImageFrame
+            key={index}
             onMouseEnter={() => setCurrentImage(index)}
             show={index === currentImage}
           >
@@ -41,7 +42,7 @@ const Section = styled.section`
 const Preview = styled.div`
   position: relative;
   display: flex;
-  height: 44rem;
+  height: 55rem;
   /* overflow: hidden; */
 `
 const Wrapper = styled.div`
@@ -55,7 +56,7 @@ const Wrapper = styled.div`
 
 const PreviewImage = styled(GatsbyImage)`
   width: 100%;
-  height: 44rem;
+  height: 55rem;
 `
 
 const Thumbnail = styled.div`
@@ -83,7 +84,10 @@ const ImageFrame = styled.div`
     background: transparent;
     border-radius: 100%;
 
-    ${p => (p.show ? `border: 2px solid red;` : `border: none;`)};
+    ${p =>
+      p.show
+        ? `border: 1px solid ${p.theme.colors.primary};`
+        : `border: none;`};
   }
 `
 

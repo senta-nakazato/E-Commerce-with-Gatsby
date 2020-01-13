@@ -11,7 +11,7 @@ import {
 import uuidv1 from "uuid/v1"
 import media from "@styles/media"
 
-const axios = require("axios")
+import axios from "axios"
 
 const CheckoutForm = ({ stripe }) => {
   const [address, setAddress] = useState("default")
@@ -99,15 +99,15 @@ const CheckoutForm = ({ stripe }) => {
 
       await axios
         .post(
-          "https://e-commerce-with-gatsby.netlify.com/.netlify/functions/checkout",
-          {
+          "http://localhost:8888/.netlify/functions/checkout",
+          JSON.stringify({
             token,
             name: name,
             email: email,
             amount: Math.floor(5000),
             token: "tok_visa",
             idempotency: uuidv1(),
-          },
+          }),
           headers
         )
         .then(response => {

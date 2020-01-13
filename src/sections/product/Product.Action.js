@@ -1,24 +1,56 @@
-import React, { useState } from "react"
+import React, { useState, useContext } from "react"
 import { css } from "@emotion/core"
 import styled from "@emotion/styled"
+import { useDispatch } from "react-redux"
 
-import AddIcon from "@icons/Add.Icon"
-import RemoveIcon from "@icons/Remove.Icon"
+import { addToCart } from "@redux/actions"
 
-const Action = () => {
+import PlusIcon from "@icons/Plus.Icon"
+import MinusIcon from "@icons/Minus.Icon"
+import { PanelContext } from "@components/Panel/Panel.Context"
+
+const Action = ({ product }) => {
   const [count, setCount] = useState(1)
+
+  const dispatch = useDispatch()
+  const { togglePanel } = useContext(PanelContext)
+
+  function addToBag(item) {
+    // let products = []
+    // let lsProduct
+    // if (localStorage.getItem("products")) {
+    //   products = JSON.parse(localStorage.getItem("products"))
+    //   lsProduct = products.find(item => {
+    //     return item.id === product.id
+    //   })
+    // }
+
+    // if (lsProduct) {
+    //   products.splice(products.indexOf(lsProduct), 1)
+    //   products.unshift({ id: product.id, count: lsProduct.count + count })
+    // } else {
+    //   products.unshift({ id: product.id, count: count })
+    // }
+
+    // localStorage.setItem("products", JSON.stringify(products))
+    item.quantity = count
+    dispatch(addToCart(item))
+    togglePanel()
+  }
+
   return (
     <Frame>
       <Quantity>
         <CountButton onClick={() => setCount(count - 1)} disable={count < 2}>
-          <RemoveIcon />
+          <MinusIcon />
         </CountButton>
         <Number value={count} />
         <CountButton onClick={() => setCount(count + 1)}>
-          <AddIcon />
+          <PlusIcon />
         </CountButton>
       </Quantity>
-      <ActionButton>ADD TO BAG</ActionButton>
+
+      <ActionButton onClick={() => addToBag(product)}>ADD TO BAG</ActionButton>
     </Frame>
   )
 }
@@ -48,6 +80,7 @@ const Number = styled.input`
 const Frame = styled.div`
   display: flex;
   justify-content: space-between;
+  margin-top: 4rem;
 `
 const ActionButton = styled.button`
   background: ${p => p.theme.colors.button};

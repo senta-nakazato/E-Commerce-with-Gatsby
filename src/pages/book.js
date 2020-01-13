@@ -14,7 +14,7 @@ const BookPage = ({ location }) => {
       <SEO title="Books" pathName={location.pathName} />
       <CheckoutContainer />
       {/* <StripeForm /> */}
-      {/* <BookCollection /> */}
+      <BookCollection />
       <Link to="/">Go to Home</Link>
     </Layout>
   )

@@ -25,10 +25,14 @@ export default merge({
   colors,
   fontSizes: [12, 14, 16, 20, 24, 32, 48, 64, 96],
   fonts: {
-    serif: "'Merriweather', Georgia, Serif",
-    sansSerif:
-      "'SF Pro Display', '-apple-system', 'BlinkMacSystemFont', 'San Francisco', 'Helvetica Neue', 'Helvetica', 'Ubuntu', 'Roboto', 'Noto', 'Segoe UI', 'Arial', sans-serif",
+    serif: `'Merriweather', Georgia, Serif`,
+    sansSerif: `'-apple-system', 'BlinkMacSystemFont', 'San Francisco', 'Helvetica Neue', 'Helvetica', 'Ubuntu', 'Roboto', 'Noto', 'Segoe UI', 'Arial', sans-serif`,
     monospace: `"Operator Mono", Consolas, Menlo, Monaco, source-code-pro, Courier New, monospace`,
+    headline: `"-apple-system", "BlinkMacSystemFont", "San Francisco",
+    "Helvetica Neue", "Helvetica", "Ubuntu", "Roboto", "Noto", "Segoe UI",
+    "Arial", sans- serif`,
+    sawarabi: `'Georgia','Sawarabi Mincho'`,
+    main: `'M PLUS 1p','M PLUS Rounded 1c'`,
   },
   styles: {
     h1: {

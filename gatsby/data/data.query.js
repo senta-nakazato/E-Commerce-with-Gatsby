@@ -12,9 +12,13 @@ module.exports.contentful = {
   products: `{
     products: allContentfulProduct {
       nodes {
+        id
         colors {
           hex
           name
+        }
+        description {
+          description
         }
         images {
           regular: fluid(maxWidth: 653, quality: 100) {
@@ -29,8 +33,20 @@ module.exports.contentful = {
         }
         name
         price    
-        description {
-          description
+        productFeatures {
+          id
+          detail {
+            detail
+          }
+          description {
+            description
+          }
+          image {
+            fluid(maxWidth: 653, quality: 100) {
+              ${GatsbyFluid_withWebp}
+            }
+          }
+          heading
         }
       }
     }

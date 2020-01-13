@@ -10,6 +10,7 @@ exports.handler = async (event, context) => {
   console.log("event", event)
 
   if (!event.body || event.httpMethod !== "POST") {
+    console.log("Not working!")
     return {
       statusCode: 400,
       headers,
@@ -48,7 +49,7 @@ exports.handler = async (event, context) => {
         return stripe.charges
           .create(
             {
-              currency: "usd",
+              currency: "jpy",
               amount: data.amount,
               receipt_email: data.email,
               customer: customer.id,

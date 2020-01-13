@@ -97,6 +97,14 @@ const SEO = ({
     >
       {children}
       <script src="https://js.stripe.com/v3/" />
+      <link
+        href="https://fonts.googleapis.com/css?family=Sawarabi+Mincho"
+        rel="stylesheet"
+      />
+      <link
+        href="https://fonts.googleapis.com/css?family=M+PLUS+Rounded+1c"
+        rel="stylesheet"
+      />
     </Helmet>
   )
 }

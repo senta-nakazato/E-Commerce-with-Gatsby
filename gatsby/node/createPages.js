@@ -37,7 +37,7 @@ module.exports = async ({ actions: { createPage }, graphql }) => {
 
   // Create product page
   log("Creating", "Product Page")
-  allProducts.forEach((product, index) => {
+  allProducts.forEach(product => {
     createPage({
       path: `/products/${product.name}`,
       component: templates.product,

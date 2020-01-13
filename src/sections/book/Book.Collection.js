@@ -3,6 +3,7 @@ import { graphql, useStaticQuery } from "gatsby"
 import GatsbyImage from "gatsby-image"
 import styled from "@emotion/styled"
 import media from "@styles/media"
+import { formatPrice } from "@utils/index"
 
 import Checkout from "@components/Checkout/Checkout"
 
@@ -31,15 +32,6 @@ const booksQuery = graphql`
 const BookCollection = () => {
   const result = useStaticQuery(booksQuery)
   const skus = result.skus.nodes
-
-  function formatPrice(price, currency) {
-    let numberFormat = new Intl.NumberFormat(["ja-JP"], {
-      style: "currency",
-      currency: currency,
-      currencyDisplay: "symbol",
-    })
-    return numberFormat.format(price)
-  }
 
   return (
     <Frame>
