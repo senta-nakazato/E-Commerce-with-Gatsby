@@ -13,13 +13,13 @@ import Footer from "@components/Footer"
 import PanelProvider from "@components/Panel/Panel.Context"
 import PanelSlideIn from "@components/Panel/Panel.SlideIn"
 
-const Layout = ({ children }) => {
+const Layout = ({ children, location }) => {
   return (
     <Provider store={store}>
       <PanelProvider>
         <Global styles={globalStyles} />
         <PanelSlideIn />
-        <Header />
+        <Header location={location} />
         <main style={{ minHeight: "100vh" }}>{children}</main>
         <Footer />
       </PanelProvider>

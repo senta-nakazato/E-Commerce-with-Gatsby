@@ -10,9 +10,9 @@ import HomeContent from "@sections/home/Home.Content"
 import HomeCTA from "@sections/home/Home.CTA"
 import OurStory from "@sections/OurStory"
 
-const IndexPage = () => {
+const IndexPage = ({ location }) => {
   return (
-    <Layout>
+    <Layout location={location}>
       <SEO title="Home" />
       <HomeHero />
       <HomeContent />

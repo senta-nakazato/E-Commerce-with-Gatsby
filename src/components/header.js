@@ -12,8 +12,8 @@ const navLinks = [
   { to: "/about", text: "ABOUT US" },
 ]
 
-const Header = () => {
-  const isHome = window.location.pathname === "/"
+const Header = ({ location }) => {
+  const isHome = location.pathname === "/"
   const { togglePanel } = useContext(PanelContext)
 
   return (
