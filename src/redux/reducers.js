@@ -2,7 +2,8 @@ import { combineReducers } from "redux"
 import actionTypes from "./actionTypes"
 
 const setItem = products => {
-  localStorage.setItem("products", JSON.stringify(products))
+  typeof window !== "undefined" &&
+    localStorage.setItem("products", JSON.stringify(products))
 }
 
 const updateQuantity = (p, quantity) => {
@@ -15,7 +16,7 @@ const updateQuantity = (p, quantity) => {
 
 let initialState = []
 
-if (localStorage.getItem("products")) {
+if (typeof window !== "undefined" && localStorage.getItem("products")) {
   const products = JSON.parse(localStorage.getItem("products"))
   initialState = [...products]
 }
