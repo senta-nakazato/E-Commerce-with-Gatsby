@@ -6,7 +6,9 @@ import { useScrollPosition } from "@utils"
 const Sticky = ({ children }) => {
   const [isHidden, setIsHidden] = useState(false)
   const [isScrolled, setIsScrolled] = useState(false)
-  const target = document.getElementById("home-hero")
+
+  const target = false
+  // const target = document.getElementById("home-hero")
   const contentHeight = target ? target.clientHeight : "600"
 
   useScrollPosition(
