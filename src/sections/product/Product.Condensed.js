@@ -11,7 +11,8 @@ const ProductCondensed = ({ product }) => {
   const [isShow, setIsShow] = useState(false)
   const { togglePanel } = useContext(PanelContext)
   const dispatch = useDispatch()
-  const target = document.getElementById("home-hero")
+  const target = false
+  // const target = document.getElementById("home-hero")
   const contentHeight = target ? target.clientHeight - 100 : "600"
 
   function addToBag(item) {
