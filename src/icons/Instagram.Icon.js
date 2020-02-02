@@ -1,6 +1,6 @@
 import React from "react"
 
-const InstagramIcon = ({ fill = "#452a46" }) => (
+const InstagramIcon = ({ fill = "#332e54" }) => (
   <svg
     width="20"
     height="20"

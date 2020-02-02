@@ -1,37 +1,60 @@
-import React, { useContext } from "react"
-import { Link } from "gatsby"
+import React, { useEffect, useState, useContext } from "react"
+import { useSelector } from "react-redux"
+import { Link, navigate } from "gatsby"
 import styled from "@emotion/styled"
+import media from "@styles/media"
 
 import ShoppingBagIcon from "@icons/ShoppingBag.Icon"
 import Sticky from "@components/Sticky"
-import PanelSlideIn from "@components/Panel/Panel.SlideIn"
-import { PanelContext } from "@components/Panel/Panel.Context"
+import { ShoppingBagContext } from "@components/ShoppingBag/ShoppingBag.Context"
+import ArrowLeftIcon from "@icons/ArrowLeft.Icon"
 
 const navLinks = [
   { to: "/products", text: "SHOP ALL" },
   { to: "/about", text: "ABOUT US" },
 ]
 
-const Header = ({ location }) => {
-  const isHome = location.pathname === "/"
-  const { togglePanel } = useContext(PanelContext)
+const Header = ({ location, checkout }) => {
+  const isTransparent =
+    location.pathname === "/about" || location.pathname === "/"
+  const { toggleShoppingBag } = useContext(ShoppingBagContext)
+  const products = useSelector(state => state.products)
+  let totalQuantity = 0
+  products.forEach(p => {
+    totalQuantity += p.quantity
+  })
 
   return (
     <Sticky>
-      <Section isHome={isHome}>
-        <Nav>
-          {navLinks.map(nav => (
-            <NavItem key={nav.to}>
-              <Link to={nav.to}>{nav.text}</Link>
-            </NavItem>
-          ))}
-        </Nav>
-        <Logo>
-          <Link to="/">Gatsby</Link>
-        </Logo>
-        <Cart onClick={() => togglePanel()}>
-          <ShoppingBagIcon />
-        </Cart>
+      <Section isTransparent={isTransparent}>
+        {checkout ? (
+          <>
+            <BackButton onClick={() => window.history.back()}>
+              <ArrowLeftIcon />
+              <span>BACK</span> TO CART
+            </BackButton>
+            <Logo>
+              <Link to="/">Gatsby</Link>
+            </Logo>
+          </>
+        ) : (
+          <>
+            <Nav>
+              {navLinks.map(nav => (
+                <NavItem key={nav.to}>
+                  <Link to={nav.to}>{nav.text}</Link>
+                </NavItem>
+              ))}
+            </Nav>
+            <Logo>
+              <Link to="/">Gatsby</Link>
+            </Logo>
+            <Cart onClick={() => toggleShoppingBag()}>
+              <ShoppingBagIcon />
+              <Quantity>{totalQuantity}</Quantity>
+            </Cart>{" "}
+          </>
+        )}
       </Section>
     </Sticky>
   )
@@ -49,23 +72,40 @@ const Section = styled.header`
   position: relative;
   z-index: 1000;
 
-  ${p => p.isHome && ` background: transparent;`};
+  ${p => p.isTransparent && ` background: transparent;`};
+
+  ${media.phablet`
+    padding: 0 2rem;
+  `}
+`
+
+const BackButton = styled.button`
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 0.7;
+  display: flex;
+  align-items: center;
+  text-transform: uppercase;
 `
 const Nav = styled.ul`
   display: flex;
   justify-content: space-between;
+
+  ${media.phablet`
+    display: none;
+  `}
 `
 const NavItem = styled.li`
-  color: ${p => p.theme.colors.primary} !important;
-  font-weight: bold;import { ShoppingBag } from '@sections/ShoppingBag';
-
+  color: ${p => p.theme.colors.headline};
+  font-weight: bold;
 
   &:not(:last-child) {
-    margin-right: 2.4rem;
+    margin-right: 3rem;
   }
 `
+
 const Logo = styled.h1`
-  color: ${p => p.theme.colors.primary};
+  color: ${p => p.theme.colors.headline};
 
   font-size: 4rem;
   font-weight: 500;
@@ -73,8 +113,23 @@ const Logo = styled.h1`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+
+  ${media.phablet`
+    font-size: 3.2rem;
+  `}
 `
 
 const Cart = styled.button`
   margin-left: auto;
+  position: relative;
+`
+
+const Quantity = styled.div`
+  color: ${p => p.theme.colors.primary};
+  font-weight: 600;
+  font-size: 12px;
+  position: absolute;
+  top: 64%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 `

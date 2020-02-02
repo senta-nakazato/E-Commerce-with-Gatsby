@@ -3,13 +3,15 @@ import { Link } from "gatsby"
 import styled from "@emotion/styled"
 import { jsx } from "theme-ui"
 
+import Button from "@components/Button"
+
 const HomeCTA = () => {
   return (
     <Sticky>
       <Section>
         <Container>
           <Link to="/products">
-            <Button>ALL PRODUCTS</Button>
+            <Button text="ALL PRODUCTS" pink />
           </Link>
         </Container>
         <Background />
@@ -79,7 +81,7 @@ const Sticky = styled.div`
 `
 
 const Section = styled.section`
-  background: rgb(234, 234, 238);
+  background: ${p => p.theme.colors.lightPurpleBackground};
   display: flex;
   justify-content: center;
   align-items: center;
@@ -89,23 +91,6 @@ const Section = styled.section`
 
 const Container = styled.div`
   margin: 25rem 0;
-`
-
-const Button = styled.button`
-  background-color: transparent;
-  border: 1px solid rgb(118, 54, 121);
-  color: rgb(118, 54, 121);
-  font-size: 11px;
-  font-weight: 500;
-  line-height: 1.3;
-  letter-spacing: 1.2px;
-  text-transform: uppercase;
-  padding: 0rem 4rem;
-  height: 6rem;
-  transition: all 300ms ease 0s;
-
-  &:hover {
-    background: ${p => p.theme.colors.primary};
-    color: white;
-  }
+  position: relative;
+  z-index: 300;
 `

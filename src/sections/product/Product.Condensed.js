@@ -4,20 +4,21 @@ import styled from "@emotion/styled"
 import { formatPrice, useScrollPosition } from "@utils"
 
 import { addToCart } from "@redux/actions"
-import { PanelContext } from "@components/Panel/Panel.Context"
+import { ShoppingBagContext } from "@components/ShoppingBag/ShoppingBag.Context"
 import ColorVariants from "@components/ColorVarients"
 
 const ProductCondensed = ({ product }) => {
   const [isShow, setIsShow] = useState(false)
-  const { togglePanel } = useContext(PanelContext)
+  const { toggleShoppingBag } = useContext(ShoppingBagContext)
   const dispatch = useDispatch()
   const target = false
   // const target = document.getElementById("home-hero")
   const contentHeight = target ? target.clientHeight - 100 : "600"
 
   function addToBag(item) {
+    item.quantity = 1
     dispatch(addToCart(item))
-    togglePanel()
+    toggleShoppingBag()
   }
 
   useScrollPosition(

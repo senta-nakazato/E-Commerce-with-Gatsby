@@ -1,26 +1,12 @@
-import React, { useContext } from "react"
-import { useDispatch, useSelector } from "react-redux"
-import { navigate, Link } from "gatsby"
+import React from "react"
+import { useSelector } from "react-redux"
 import GatsbyImage from "gatsby-image"
 import styled from "@emotion/styled"
 
 import { formatPrice } from "@utils"
-import { removeFromCart } from "@redux/actions"
 
-import RemoveIcon from "@icons/Remove.Icon"
-import { PanelContext } from "@components/Panel/Panel.Context"
-import Button from "@components/Button"
-
-const ShoppingBag = () => {
+const CheckoutReview = () => {
   const products = useSelector(state => state.products)
-  const { togglePanel } = useContext(PanelContext)
-
-  const handleClick = event => {
-    event.preventDefault()
-    togglePanel()
-    navigate("/products")
-  }
-
   let totalAmount = 0
   if (products.length !== 0) {
     products.forEach(p => {
@@ -28,30 +14,15 @@ const ShoppingBag = () => {
     })
   }
 
-  if (products.length === 0) {
-    return (
-      <Frame>
-        <Empty>
-          <h1 className="heading">
-            YOUR BAG
-            <br />
-            <p className="sub-heading">is currently empty</p>
-          </h1>{" "}
-          <Link to="/products">
-            <Button text="SHOP ALL PRODUCTS" width="calc(100% - 30px)" white />
-          </Link>
-        </Empty>
-      </Frame>
-    )
-  } else {
-    return (
+  return (
+    <Section>
       <Frame>
         <ProductList>
           {products.map((product, index) => (
             <ProductItem product={product} index={index} />
           ))}
         </ProductList>
-        <Summary as="table">
+        <Summary>
           <tr>
             <th>Subtotal</th>
             <td>{formatPrice(totalAmount)}</td>
@@ -65,23 +36,22 @@ const ShoppingBag = () => {
             <td>0</td>
           </tr>
           <hr />
-          <tr className="total">
+          <tr>
             <th>Total</th>
-            <td>{formatPrice(totalAmount)}</td>
+            <td className="total">{formatPrice(totalAmount)}</td>
           </tr>
-          <CheckoutButton onClick={() => navigate("/checkout")}>
-            CHECK OUT
-          </CheckoutButton>
         </Summary>
       </Frame>
-    )
-  }
+    </Section>
+  )
 }
 
-export default ShoppingBag
+export default CheckoutReview
 
-const ProductItem = ({ product, index }) => {
-  const dispatch = useDispatch()
+const ProductItem = ({ product }) => {
+  const quantity = product.quantity ? product.quantity : "1"
+  const price = product.price
+  const total = quantity * price
 
   return (
     <Row key={product.id}>
@@ -91,44 +61,34 @@ const ProductItem = ({ product, index }) => {
       <Info>
         <Left>
           <Name>{product.name}</Name>
-          <Price>{formatPrice(product.price)}</Price>
+          <div style={{ display: "flex", alignItems: "center" }}>
+            <Quantity>{quantity}</Quantity>
+            <span style={{ padding: "0 4px" }}>×</span>
+            <Price>{formatPrice(price)}</Price>
+          </div>
         </Left>
         <Right>
-          <RemoveButton onClick={() => dispatch(removeFromCart(index))}>
-            <RemoveIcon />
-          </RemoveButton>
-          <Quantity>
-            数量：
-            <span>{product.quantity ? product.quantity : "1"}</span>
-          </Quantity>
+          <Total>{formatPrice(total)}</Total>
         </Right>
       </Info>
     </Row>
   )
 }
 
+const Section = styled.section`
+  background: rgb(250, 245, 243);
+  flex-basis: 50%;
+  padding: 4rem;
+  padding-bottom: 6rem;
+  margin: 0 auto;
+`
+
 const Frame = styled.div`
   height: 100%;
-  width: 32rem;
+  width: 80%;
+  min-width: 34rem;
+  margin: 0 auto;
   position: relative;
-`
-const Empty = styled.div`
-  text-align: center;
-
-  .heading {
-    font-size: 3.2rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    margin-bottom: 4rem;
-  }
-
-  .sub-heading {
-    font-size: 2rem;
-    font-weight: 300;
-    letter-spacing: 1.2px;
-    text-transform: none;
-    margin-top: 1.6rem;
-  }
 `
 
 const ProductList = styled.ul`
@@ -148,13 +108,13 @@ const Row = styled.div`
 `
 
 const ImageContainer = styled.div`
-  height: 8rem;
-  width: 8rem;
+  height: 6rem;
+  width: 6rem;
   margin-right: 2rem;
 
   .gatsby-image-wrapper {
-    height: 8rem;
-    width: 8rem;
+    height: 6rem;
+    width: 6rem;
   }
 `
 const Info = styled.div`
@@ -180,30 +140,24 @@ const Right = styled.div`
   margin-left: auto;
   height: 100%;
 `
+
+const Total = styled.p`
+  font-size: 16px;
+  font-weight: 500;
+`
 const Quantity = styled.p`
   font-size: 14px;
-  font-weight: 300;
-  margin-top: auto;
+  font-weight: 400;
   text-align: left;
-
-  span {
-    font-size: 16px;
-    font-weight: 600;
-    padding-right: 4px;
-  }
 `
 const Price = styled.p`
   font-size: 14px;
-  font-weight: 300;
-`
-const RemoveButton = styled.button`
-  height: 24px;
-  width: 24px;
+  font-weight: 400;
 `
 const Summary = styled.table`
   position: absolute;
   bottom: 0;
-  background: white;
+  background: rgb(250, 245, 243);
   margin-top: auto;
   height: auto;
   width: 100%;
@@ -226,6 +180,10 @@ const Summary = styled.table`
     margin: 8px 0;
     height: 0.7px;
     width: 100%;
+  }
+  .total {
+    font-size: 2rem;
+    font-weight: 600;
   }
 `
 const CheckoutButton = styled.button`

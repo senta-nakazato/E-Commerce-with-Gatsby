@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useEffect } from "react"
 import { Link } from "gatsby"
 
 import Layout from "@components/layout"
@@ -11,6 +11,11 @@ import HomeCTA from "@sections/home/Home.CTA"
 import OurStory from "@sections/OurStory"
 
 const IndexPage = ({ location }) => {
+  useEffect(() => {
+    return () => {
+      localStorage.setItem("previousPath", location.pathname)
+    }
+  }, [])
   return (
     <Layout location={location}>
       <SEO title="Home" />

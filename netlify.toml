@@ -4,3 +4,4 @@
 
 [dev]
   command = "yarn start"
+  functions = "functions"

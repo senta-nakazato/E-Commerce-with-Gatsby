@@ -8,11 +8,12 @@ const path = require("path")
 const templatesDirectory = path.resolve(__dirname, "../../src/templates")
 const templates = {
   product: path.resolve(templatesDirectory, "product.template.js"),
+  products: path.resolve(templatesDirectory, "products.template.js"),
 }
 
 const query = require("../data/data.query")
 
-function slugify(string, base) {
+function slugify(string) {
   const slug = string
     .toLowerCase()
     .normalize("NFD")
@@ -35,11 +36,21 @@ module.exports = async ({ actions: { createPage }, graphql }) => {
     console.error(error)
   }
 
+  // Create all products page
+  log("Creating", "All Products Page")
+  createPage({
+    path: `/products`,
+    component: templates.products,
+    context: {
+      products: allProducts,
+    },
+  })
+
   // Create product page
   log("Creating", "Product Page")
   allProducts.forEach(product => {
     createPage({
-      path: `/products/${product.name}`,
+      path: `/products/${slugify(product.name)}`,
       component: templates.product,
       context: {
         product,

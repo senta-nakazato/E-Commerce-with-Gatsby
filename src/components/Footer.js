@@ -16,7 +16,9 @@ const Footer = () => {
     <Section>
       <LogoWrapper>
         <HorizontalRule />
-        <Logo />
+        <Link to="/">
+          <Logo />
+        </Link>
         <HorizontalRule />
       </LogoWrapper>
       <Grid>

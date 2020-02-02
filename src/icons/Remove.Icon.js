@@ -1,6 +1,6 @@
 import React from "react"
 
-const MinusIcon = ({ fill = "#9013fe" }) => {
+const MinusIcon = ({ fill = "#332e54" }) => {
   return (
     <svg width="24" height="24">
       <rect width="24" height="24" fill="none" rx="0" ry="0" />

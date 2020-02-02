@@ -1,5 +1,6 @@
 import React, { useRef, useState, useEffect } from "react"
 
+import { css } from "@emotion/core"
 import styled from "@emotion/styled"
 
 const ColorsVarients = ({ product, withName }) => {
@@ -25,6 +26,7 @@ const ColorsVarients = ({ product, withName }) => {
             onMouseLeave={() => setHoverColor(null)}
             onClick={() => setCurrentColor(index)}
             show={index === currentColor}
+            clickable={withName}
           />
         ))}
       </Container>
@@ -40,16 +42,18 @@ const Container = styled.div`
 
 const Color = styled.div`
   background: ${p => p.hex};
+  border: 0.7px solid lightgrey;
   width: 2rem;
   height: 2rem;
   border-radius: 100%;
 
   margin-right: 12px;
   position: relative;
-  cursor: pointer;
+  cursor: ${p => (p.clickable ? "pointer" : "default")};
+  pointer-events: ${p => (p.clickable ? "auto" : "none")};
 
   &:after {
-    display: block;
+    display: ${p => (p.clickable ? "block" : "none")};
     content: "";
     position: absolute;
     top: 50%;

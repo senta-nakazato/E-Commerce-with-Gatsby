@@ -10,19 +10,20 @@ import { globalStyles } from "@styles"
 
 import Header from "@components/Header"
 import Footer from "@components/Footer"
-import PanelProvider from "@components/Panel/Panel.Context"
-import PanelSlideIn from "@components/Panel/Panel.SlideIn"
+import ShoppingBagProvider from "@components/ShoppingBag/ShoppingBag.Context"
+import ShoppingBagSlideIn from "@components/ShoppingBag/ShoppingBag.SlideIn"
 
 const Layout = ({ children, location }) => {
   return (
     <Provider store={store}>
-      <PanelProvider>
+      <ShoppingBagProvider>
         <Global styles={globalStyles} />
-        <PanelSlideIn />
+        <ShoppingBagSlideIn />
+
         <Header location={location} />
         <main style={{ minHeight: "100vh" }}>{children}</main>
         <Footer />
-      </PanelProvider>
+      </ShoppingBagProvider>
     </Provider>
   )
 }

@@ -8,16 +8,16 @@ import { formatPrice } from "@utils"
 import { removeFromCart } from "@redux/actions"
 
 import RemoveIcon from "@icons/Remove.Icon"
-import { PanelContext } from "@components/Panel/Panel.Context"
+import { ShoppingBagContext } from "./ShoppingBag.Context"
 import Button from "@components/Button"
 
 const ShoppingBag = () => {
   const products = useSelector(state => state.products)
-  const { togglePanel } = useContext(PanelContext)
+  const { toggleShoppingBag } = useContext(ShoppingBagContext)
 
   const handleClick = event => {
     event.preventDefault()
-    togglePanel()
+    toggleShoppingBag()
     navigate("/products")
   }
 

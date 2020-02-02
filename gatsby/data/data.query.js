@@ -1,11 +1,11 @@
 const GatsbyFluid_withWebp = `
-  base64
   aspectRatio
   src
   srcSet
   srcWebp
   srcSetWebp
   sizes
+  tracedSVG
 `
 
 module.exports.contentful = {

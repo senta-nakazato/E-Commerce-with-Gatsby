@@ -1,6 +1,6 @@
 import React from "react"
 
-const FacebookIcon = ({ fill = "#452a46" }) => (
+const FacebookIcon = ({ fill = "#332e54" }) => (
   <svg
     width="10"
     height="20"

@@ -1,8 +1,14 @@
 import React from "react"
 
-const ShoppingBagIcon = ({ fill = "#452a46#" }) => {
+const ShoppingBagIcon = ({ fill = "#332e54" }) => {
   return (
-    <svg width="24" height="24">
+    <svg
+      width="32"
+      height="32"
+      viewBox="0 0 24 24"
+      fill={fill}
+      xmlns="http://www.w3.org/2000/svg"
+    >
       <rect width="24" height="24" fill="none" rx="0" ry="0" />
       <path
         fillRule="evenodd"

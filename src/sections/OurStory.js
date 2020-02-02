@@ -23,18 +23,19 @@ const imageQuery = graphql`
 const OurStory = ({ product }) => {
   const data = useStaticQuery(imageQuery)
   const imageSrc = data.file.childImageSharp.fluid
+  const url = "/about"
 
   return (
     <Section>
       <Grid>
         <ImageContainer>
-          <Link to="/about">
+          <Link to={url}>
             <Image fluid={imageSrc} />
           </Link>
         </ImageContainer>
         <Info>
           <Header>
-            <Link to="/about">
+            <Link to={url}>
               <Heading>OUR STORY</Heading>
               <Description>
                 A conditioning spray for pubic hair and skin that hydrates and
@@ -42,7 +43,7 @@ const OurStory = ({ product }) => {
               </Description>
             </Link>
           </Header>
-          <ActionLink className="action-link">
+          <ActionLink to={url} className="action-link">
             <Text>LEARN MORE</Text>
             <ArrowIcon />
           </ActionLink>
@@ -117,7 +118,7 @@ const Text = styled.span`
   text-align: center;
   margin-right: 8px;
 `
-const ActionLink = styled.button`
+const ActionLink = styled(Link)`
   transition: all 0.2s var(--ease-in-out-quad);
 
   &:hover {

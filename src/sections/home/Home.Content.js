@@ -3,12 +3,16 @@ import { useStaticQuery, graphql } from "gatsby"
 import GatsbyImage from "gatsby-image"
 import { css } from "@emotion/core"
 import styled from "@emotion/styled"
+import media from "@styles/media"
 
 import Product from "./Home.Product"
 
 const productsQuery = graphql`
   {
-    products: allContentfulProduct(limit: 3) {
+    products: allContentfulProduct(
+      limit: 3
+      filter: { isFeatured: { eq: true } }
+    ) {
       nodes {
         images {
           fluid(maxWidth: 400) {
@@ -64,11 +68,12 @@ const Wrapper = styled.div`
 
   &.copy-writing {
     padding: 100px 0px 80px;
-    background: rgb(250, 245, 243);
+    background: ${p => p.theme.colors.greyBackground};
   }
 `
 
 const Heading = styled.h3`
+  color: ${p => p.theme.colors.headline};
   font-size: 2rem;
   font-weight: 300;
   display: flex;
@@ -97,8 +102,8 @@ const Section = styled.section`
 `
 
 const CopyWriting = styled.p`
-  color: rgb(8, 4, 0);
-  font-size: 20px;
+  color: ${p => p.theme.colors.headline};
+  font-size: 2rem;
   font-weight: 400;
   letter-spacing: 1px;
   line-height: 1.6;
@@ -106,4 +111,9 @@ const CopyWriting = styled.p`
   text-align: center;
   margin: 0 auto 25px;
   width: 48rem;
+
+  ${media.phablet`
+    font-size: 18px;
+    width: 80%
+  `}
 `

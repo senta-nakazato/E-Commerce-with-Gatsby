@@ -20,7 +20,7 @@ const CheckoutContainer = () => {
   return (
     <StripeProvider stripe={stripe}>
       <Elements>
-        <CheckoutForm />
+        <CheckoutForm stripe={stripe} />
       </Elements>
     </StripeProvider>
   )

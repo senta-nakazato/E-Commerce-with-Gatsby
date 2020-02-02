@@ -6,11 +6,10 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY),
     "Access-Control-Allow-Headers": "Content-Type",
   }
 
-exports.handler = async (event, context) => {
+exports.handler = async event => {
   console.log("event", event)
 
   if (!event.body || event.httpMethod !== "POST") {
-    console.log("Not working!")
     return {
       statusCode: 400,
       headers,

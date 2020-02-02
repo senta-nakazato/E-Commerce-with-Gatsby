@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useContext } from "react"
 import styled from "@emotion/styled"
 import { motion } from "framer-motion"
 
+import { ShoppingBagContext } from "./ShoppingBag.Context"
+import ShoppingBag from "./ShoppingBag"
+
 import media from "@styles/media"
 import { scrollable } from "@utils"
 import BackArrowIcon from "@icons/BackArrow.Icon"
@@ -11,7 +14,8 @@ import BackArrowIcon from "@icons/BackArrow.Icon"
 //   productDetail: VideoStory,
 // }
 
-const PanelSlideIn = ({ showPanel, togglePanel, children }) => {
+const ShoppingBagSlideIn = () => {
+  const { showShoppingBag, toggleShoppingBag } = useContext(ShoppingBagContext)
   const frameRef = useRef(null)
 
   const variants = {
@@ -35,17 +39,17 @@ const PanelSlideIn = ({ showPanel, togglePanel, children }) => {
 
   function handleEscKeyPress(event) {
     if (event.key === "Escape") {
-      togglePanel()
+      toggleShoppingBag(event)
     }
   }
 
   useEffect(() => {
-    if (showPanel) {
+    if (showShoppingBag) {
       scrollable("disable")
 
       function handleEscKeyPress(event) {
         if (event.key === "Escape") {
-          togglePanel()
+          toggleShoppingBag(event)
         }
       }
 
@@ -55,33 +59,34 @@ const PanelSlideIn = ({ showPanel, togglePanel, children }) => {
     } else {
       scrollable("enable")
     }
-  }, [showPanel])
+  }, [showShoppingBag])
 
   return (
     <Frame
-      tabIndex={showPanel ? 0 : -1}
-      aria-hidden={!showPanel}
+      tabIndex={showShoppingBag ? 0 : -1}
+      aria-hidden={!showShoppingBag}
       ref={frameRef}
       initial={false}
-      animate={showPanel ? "open" : "closed"}
+      animate={showShoppingBag ? "open" : "closed"}
     >
-      <Mask isActive={showPanel} onClick={() => togglePanel()} />
+      <Mask isActive={showShoppingBag} onClick={toggleShoppingBag} />
 
       <SlideIn variants={variants}>
         <CloseContainer
-          onClick={() => togglePanel()}
-          animation={showPanel}
+          onClick={toggleShoppingBag}
+          animation={showShoppingBag}
           data-a11y="false"
         >
           <BackArrowIcon />
         </CloseContainer>
-        {children}
+
+        <ShoppingBag />
       </SlideIn>
     </Frame>
   )
 }
 
-export default PanelSlideIn
+export default ShoppingBagSlideIn
 
 const Frame = styled(motion.div)`
   position: relative;

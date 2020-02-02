@@ -4,7 +4,7 @@ import { Link as GatsbyLink } from "gatsby"
 import GatsbyImage from "gatsby-image"
 import styled from "@emotion/styled"
 
-import { formatPrice } from "@utils/index"
+import { formatPrice, slugify } from "@utils/index"
 
 import ArrowIcon from "@icons/Arrow.Icon"
 
@@ -13,7 +13,7 @@ const Product = ({ product }) => {
   const image = product.images[0].fluid
 
   return (
-    <Link to={`/products/${name}`}>
+    <Link to={`/products/${slugify(name)}`}>
       <Image fluid={image} />
       <Header>
         <Name>{name}</Name>

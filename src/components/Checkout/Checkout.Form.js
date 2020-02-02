@@ -1,41 +1,27 @@
 import React, { useEffect, useState } from "react"
+import { useSelector } from "react-redux"
 import { css } from "@emotion/core"
 import styled from "@emotion/styled"
-import {
-  CardElement,
-  injectStripe,
-  CardNumberElement,
-  CardExpiryElement,
-  CardCVCElement,
-} from "react-stripe-elements"
+import { CardElement, injectStripe } from "react-stripe-elements"
 import uuidv1 from "uuid/v1"
 import media from "@styles/media"
 
-import axios from "axios"
-
-const CheckoutForm = ({ stripe }) => {
-  const [address, setAddress] = useState("default")
+const CheckoutForm = ({ stripe, toggleOverlay }) => {
+  const [address, setAddress] = useState("")
+  const [address2, setAddress2] = useState("")
   const [city, setCity] = useState("")
   const [email, setEmail] = useState("")
   const [name, setName] = useState("")
   const [prefecture, setPrefecture] = useState("")
-  const [postalCode, setPostalCode] = useState("")
-  const [status, setStatus] = useState("default")
+  const [postalcode, setPostalcode] = useState("")
+  const [status, setStatus] = useState("")
 
-  const handleBlur = () => {
-    console.log("[blur]")
-  }
-  const handleChange = change => {
-    console.log("[change]", change)
-  }
-  const handleClick = () => {
-    console.log("[click]")
-  }
-  const handleFocus = () => {
-    console.log("[focus]")
-  }
-  const handleReady = () => {
-    console.log("[ready]")
+  const products = useSelector(state => state.products)
+  let totalAmount = 0
+  if (products.length !== 0) {
+    products.forEach(p => {
+      totalAmount += p.quantity * p.price
+    })
   }
 
   const createOptions = () => {
@@ -43,21 +29,106 @@ const CheckoutForm = ({ stripe }) => {
       style: {
         base: {
           fontSize: "16px",
-          color: "yellowgreen",
+          color: "black",
           letterSpacing: "0.025em",
           fontFamily: "Source Code Pro, monospace",
           "::placeholder": {
-            color: "white",
+            color: "#cecece",
           },
           ":focus": {
-            color: "purple",
+            color: "black",
           },
           padding: "0",
         },
         invalid: {
-          color: "#9e2146",
+          color: "rgb(202, 0, 0)",
         },
       },
+    }
+  }
+
+  const handlePostcode = async event => {
+    setPostalcode(event.target.value)
+
+    try {
+      const headers = {
+        apikey: process.env.GATSBY_POSTCODE_API_KEY,
+      }
+
+      await fetch(
+        `https://apis.postcode-jp.com/api/v3/postcodes?postcode=${postalcode}&startWith=true&normalize=true&general=true&office=true`,
+        {
+          method: "GET",
+          headers,
+        }
+      ).then(response => {
+        if (response.status === 200) {
+          response.text().then(text => {
+            const addressData = JSON.parse(text).data[0]
+            if (JSON.parse(text).size > 0) {
+              setCity(addressData.city)
+              setPrefecture(addressData.pref)
+              return setAddress(addressData.town)
+            } else {
+              setCity("")
+              setPrefecture("")
+              setAddress("")
+            }
+          })
+        } else {
+          response.text().then(text => console.log(text))
+          throw new Error("Network response was not ok.")
+        }
+      })
+    } catch (error) {
+      setStatus("error")
+      console.log(error)
+    }
+  }
+
+  const handleSubmit = async event => {
+    event.preventDefault()
+    // toggleOverlay()
+    setStatus("submitting")
+
+    try {
+      let { token } = await stripe.createToken({
+        address_city: city,
+        address_country: "JP",
+        address_line1: address,
+        address_line2: address2,
+        address_state: prefecture,
+        address_zip: postalcode,
+        country: "JP",
+      })
+
+      const headers = {
+        "Content-Type": "application/json",
+      }
+
+      await fetch("/.netlify/functions/checkout", {
+        method: "POST",
+        body: JSON.stringify({
+          token,
+          name: name,
+          email: email,
+          amount: Math.floor(totalAmount),
+          token: "tok_visa", //testing token, later we would use real token
+          idempotency: uuidv1(),
+        }),
+        headers,
+      }).then(response => {
+        if (response === 200) {
+          setStatus("complete")
+          console.log("Purchase Complete!")
+        } else {
+          response.text().then(text => console.log(text))
+          throw new Error("Network response was not ok.")
+        }
+      })
+    } catch (error) {
+      setStatus("error")
+      console.log(error)
     }
   }
 
@@ -78,67 +149,20 @@ const CheckoutForm = ({ stripe }) => {
         }
       })
     })
-
-    return () => {}
-  }, [])
-
-  const handleSubmit = async event => {
-    event.preventDefault()
-    setStatus("submitting")
-
-    try {
-      let { token } = await stripe.createToken({
-        // address_city: city,
-        address_country: "JP",
-        address_zip: "212121",
-      })
-
-      const headers = {
-        "Content-Type": "application/json",
-      }
-
-      await axios
-        .post(
-          "https://e-commerce-with-gatsby.netlify.com/.netlify/functions/checkout",
-          JSON.stringify({
-            token,
-            name: name,
-            email: email,
-            amount: Math.floor(5000),
-            token: "tok_visa",
-            idempotency: uuidv1(),
-          }),
-          headers
-        )
-        .then(response => {
-          console.log("response", response)
-
-          if (response === 200) {
-            setStatus("complete")
-            console.log("Purchase Complete!")
-          } else {
-            response.text().then(text => console.log(text))
-            throw new Error("Network response was not ok.")
-          }
-        })
-    } catch (error) {
-      setStatus("error")
-      console.log(error)
-    }
-  }
+  }, [postalcode])
 
   return (
     <Container>
       <Form>
-        <h4>Would you like to complete the purchase?</h4>
+        <FieldHeading>お客様情報</FieldHeading>
         <Field>
           <Row>
-            <Label htmlFor="name">Name</Label>
+            <Label htmlFor="name">お名前</Label>
             <Input
               id="name"
               type="text"
-              placeholder="本田飛鳥"
-              onChange={event => console.log(event.target.value)}
+              placeholder="渡邉　康太郎"
+              onChange={event => setName(event.target.value)}
             />
           </Row>
           <Row>
@@ -147,51 +171,82 @@ const CheckoutForm = ({ stripe }) => {
               id="email"
               type="text"
               placeholder="test@gmail.com"
-              onChange={event => console.log(event.target.value)}
+              onChange={event => setEmail(event.target.value)}
             />
           </Row>
         </Field>
 
-        {/* <Field>
-          <Row>
-            <Label htmlFor="PostalCode">PostalCode</Label>
-            <Input id="PostalCode" type="text" placeholder="112-3200" />
-          </Row>
-          <Row>
-            <Label htmlFor="Prefecture">Prefecture</Label>
-            <Input id="Prefecture" type="text" placeholder="滋賀県" />
-          </Row>
-          <Row>
-            <Label htmlFor="City">City</Label>
-            <Input id="City" type="text" placeholder="南城市" />
-          </Row>
-          <Row>
-            <Label htmlFor="Address">Address</Label>
-            <Input id="Address" type="text" placeholder="津波古112-2" />
-          </Row>
-        </Field> */}
-
+        <FieldHeading>お届け先住所</FieldHeading>
         <Field>
           <Row>
-            <CardElement
-              onBlur={handleBlur}
-              onChange={handleChange}
-              onFocus={handleFocus}
-              onReady={handleReady}
-              {...createOptions()}
-              id="card"
-              className="empty"
+            <Label htmlFor="postalcode">郵便番号</Label>
+            <Input
+              id="postalcode"
+              type="text"
+              placeholder="112-3200"
+              onChange={handlePostcode}
+              // onChange={event => setPostalcode(event.target.value)}
+            />
+          </Row>
+          <Row>
+            <Label htmlFor="prefecture">都道府県</Label>
+            <Input
+              id="prefecture"
+              type="text"
+              placeholder="滋賀県"
+              value={prefecture}
+              onChange={event => setPrefecture(event.target.value)}
+            />
+          </Row>
+          <Row>
+            <Label htmlFor="city">市区町村</Label>
+            <Input
+              id="city"
+              type="text"
+              placeholder="南城市"
+              value={city}
+              onChange={event => setCity(event.target.value)}
+            />
+          </Row>
+          <Row>
+            <Label htmlFor="sddress">住所</Label>
+            <Input
+              id="address"
+              type="text"
+              placeholder="津波古112-2"
+              value={address}
+              onChange={event => setAddress(event.target.value)}
+            />
+          </Row>
+          <Row>
+            <Label htmlFor="address2">
+              建物名・
+              <br />
+              部屋番号
+            </Label>
+            <Input
+              id="address2"
+              type="text"
+              placeholder="レオパレスGatsby 202"
+              onChange={event => setAddress2(event.target.value)}
             />
           </Row>
         </Field>
 
-        <Button
+        <FieldHeading>お支払い情報</FieldHeading>
+        <Field>
+          <Row>
+            <CardElement {...createOptions()} id="card" className="empty" />
+          </Row>
+        </Field>
+
+        <CheckoutButton
           type="submit"
           disabled={status === "submitting"}
-          onClick={() => handleSubmit}
+          onClick={handleSubmit}
         >
-          {status === "submitting" ? "Submitting" : "Submit Order"} $25
-        </Button>
+          {status === "submitting" ? "送信中" : "注文する"}
+        </CheckoutButton>
       </Form>
     </Container>
   )
@@ -206,13 +261,13 @@ const appearance = css`
 `
 
 const Label = styled.label`
-  width: 15%;
+  color: grey;
   min-width: 70px;
-  padding: 11px 0;
-  color: #c4f0ff;
   overflow: hidden;
+  padding: 11px 0;
   text-overflow: ellipsis;
-  white-space: nowrap;
+  width: 30%;
+  white-space: pre-wrap;
 `
 
 const BaseLine = styled.div`
@@ -231,24 +286,21 @@ const Form = styled.form`
 `
 
 const Row = styled.div`
-  display: -ms-flexbox;
   display: flex;
-  -ms-flex-align: center;
   align-items: center;
   margin-left: 15px;
   & + & {
-    border-top: 1px solid #819efc;
+    border-top: 1px solid rgb(234, 234, 238);
   }
 `
 
 const Field = styled.fieldset`
-  margin-bottom: 2rem;
-  padding: 0;
   border-style: none;
-  background-color: #7795f8;
-  box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 #829fff;
-  border-radius: 4px;
+  background: white;
+  margin-bottom: 3.2rem;
+  padding: 0;
+  /* box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 #829fff; */
 
   ${p =>
     p.halfWidth &&
@@ -262,38 +314,36 @@ const Field = styled.fieldset`
     `};
 `
 
+const FieldHeading = styled.h2`
+  color: ${p => p.theme.colors.font};
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  margin-bottom: 8px;
+`
+
 const Input = styled.input`
   width: 100%;
   left: 0;
   bottom: 0;
-  color: #32325d;
-  background-color: transparent;
+  color: ${p => p.theme.colors.font};
+  background-color: white;
   ${appearance}
+
+  &::-webkit-input-placeholder {
+    color: #cecece;
+    transition: color 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+  }
 
   &.focused::-webkit-input-placeholder,
   &.focused::-moz-placeholder,
   &:not(.empty)::-moz-placeholder {
-    color: #cfd7df;
+    color: #cecece;
   }
 
   &.focused,
   &::not(.empty) {
     opacity: 1;
-  }
-
-  &:not(.empty)::-webkit-input-placeholder {
-    color: #cfd7df;
-  }
-
-  &::-webkit-input-placeholder {
-    color: transparent;
-    transition: color 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-  }
-
-  &:-webkit-autofill {
-    -webkit-text-fill-color: #e39f48;
-    transition: background-color 100000000s;
-    -webkit-animation: 1ms void-animation-out;
   }
 
   &.StripeElement {
@@ -317,34 +367,11 @@ const Input = styled.input`
   }
 
   &.focused + ${Label} + ${BaseLine} {
-    background-color: #24b47e;
+    background-color: red;
   }
 
   &.focused.invalid + ${Label} + ${BaseLine} {
-    background-color: #e25950;
-  }
-`
-
-const Button = styled.button`
-  display: block;
-  width: calc(100% - 30px);
-  height: 40px;
-  margin: 40px 15px 0;
-  background-color: #f6a4eb;
-  box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 #ffb9f6;
-  border-radius: 4px;
-  color: #fff;
-  font-weight: 600;
-  cursor: pointer;
-  ${appearance}
-
-  &:hover {
-    color: #fff;
-    cursor: pointer;
-    background-color: #7795f8;
-    transform: translateY(-1px);
-    box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+    background-color: green;
   }
 `
 
@@ -360,13 +387,13 @@ const Container = styled.div`
   transition-duration: 0.3s;
   transition-timing-function: cubic-bezier(0.165, 0.84, 0.44, 1);
 
-  .form .StripeElement--webkit-autofill {
+  /* .form .StripeElement--webkit-autofill {
     background: transparent !important;
   }
 
   .StripeElement--webkit-autofill {
     background: transparent !important;
-  }
+  } */
 
   .StripeElement {
     width: 100%;
@@ -389,14 +416,23 @@ const Container = styled.div`
     font-size: 2rem !important;
   }
 
+  input:-internal-autofill-selected {
+    background: white !important;
+  }
+  /* 
+  input:-internal-autofill-selected {
+    background: red !important;
+  }import { useSelector } from 'react-redux';
+
+
   input::placeholder {
     color: green;
   }
 
   input:focus,
   .StripeElement--focus {
-    /* box-shadow: rgba(50, 50, 93, 0.109804) 0px 4px 6px,
-      rgba(0, 0, 0, 0.0784314) 0px 1px 3px; */
+    box-shadow: rgba(50, 50, 93, 0.109804) 0px 4px 6px,
+      rgba(0, 0, 0, 0.0784314) 0px 1px 3px;
     -webkit-transition: all 150ms ease;
     transition: all 150ms ease;
   }
@@ -410,8 +446,8 @@ const Container = styled.div`
     background-color: #d782d9;
     box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08),
       inset 0 1px 0 #e298d8;
-  }
-
+  } */
+  /* 
   form .error svg .base {
     fill: #fff;
   }
@@ -442,5 +478,17 @@ const Container = styled.div`
 
   form .success .reset path {
     fill: #fff;
-  }
+  } */
+`
+const CheckoutButton = styled.button`
+  background: ${p => p.theme.colors.primary};
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  text-transform: uppercase;
+  text-align: center;
+
+  padding: 2rem;
+  margin-top: 2rem;
+  width: 100%;
 `

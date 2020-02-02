@@ -2,16 +2,15 @@ import { combineReducers } from "redux"
 import actionTypes from "./actionTypes"
 
 const setItem = products => {
-  typeof window !== "undefined" &&
+  if (typeof window !== "undefined") {
     localStorage.setItem("products", JSON.stringify(products))
+  }
 }
 
 const updateQuantity = (p, quantity) => {
-  const products = p.quantity
+  return p.quantity
     ? { ...p, quantity: p.quantity + quantity }
     : { ...p, quantity: quantity }
-  setItem([products])
-  return products
 }
 
 let initialState = []
@@ -30,13 +29,14 @@ const products = (state = initialState, action) => {
         return [...state, action.product]
       }
 
-      return state.map(p => {
+      const products = state.map(p => {
         if (p.id === action.product.id) {
           return updateQuantity(p, action.product.quantity)
         }
-        setItem(p)
         return p
       })
+      setItem(products)
+      return products
 
     case actionTypes.REMOVE_PRODUCT_FROM_CART:
       state.splice(action.index, 1)

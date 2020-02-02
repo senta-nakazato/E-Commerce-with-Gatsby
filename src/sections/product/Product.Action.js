@@ -7,35 +7,18 @@ import { addToCart } from "@redux/actions"
 
 import PlusIcon from "@icons/Plus.Icon"
 import MinusIcon from "@icons/Minus.Icon"
-import { PanelContext } from "@components/Panel/Panel.Context"
+import { ShoppingBagContext } from "@components/ShoppingBag/ShoppingBag.Context"
 
 const Action = ({ product }) => {
   const [count, setCount] = useState(1)
 
   const dispatch = useDispatch()
-  const { togglePanel } = useContext(PanelContext)
+  const { toggleShoppingBag } = useContext(ShoppingBagContext)
 
   function addToBag(item) {
-    // let products = []
-    // let lsProduct
-    // if (localStorage.getItem("products")) {
-    //   products = JSON.parse(localStorage.getItem("products"))
-    //   lsProduct = products.find(item => {
-    //     return item.id === product.id
-    //   })
-    // }
-
-    // if (lsProduct) {
-    //   products.splice(products.indexOf(lsProduct), 1)
-    //   products.unshift({ id: product.id, count: lsProduct.count + count })
-    // } else {
-    //   products.unshift({ id: product.id, count: count })
-    // }
-
-    // localStorage.setItem("products", JSON.stringify(products))
     item.quantity = count
     dispatch(addToCart(item))
-    togglePanel()
+    toggleShoppingBag()
   }
 
   return (

@@ -3,20 +3,16 @@ import { graphql, useStaticQuery } from "gatsby"
 import GatsbyImage from "gatsby-image"
 import { css } from "@emotion/core"
 import styled from "@emotion/styled"
-import { InView } from "react-intersection-observer"
 
 import AddIcon from "@icons/Add.Icon"
-import { PanelContext } from "@components/Panel/Panel.Context"
 import { ParallaxBox } from "@components/ParallaxBox"
+import PanelSlideIn from "@components/Panel/Panel.SlideIn"
 
 const ProductFeatures = ({ productFeatures }) => {
-  const { togglePanel } = useContext(PanelContext)
+  const [showPanel, setShowPanel] = useState(false)
 
-  const handleView = (inView, entry) => {
-    const $element = entry.target
-    $element.setAttribute("opacity", "1")
-    console.log($element)
-    console.log("inView", inView)
+  const togglePanel = () => {
+    setShowPanel(!showPanel)
   }
 
   return (
@@ -37,11 +33,12 @@ const ProductFeatures = ({ productFeatures }) => {
             />
             {feature.detail && (
               <>
-                {/* <Detail>{feature.detail.detail}</Detail> */}
-
-                <button onClick={() => togglePanel()}>
+                <button onClick={() => togglePanel(!showPanel)}>
                   <AddIcon />
                 </button>
+                <PanelSlideIn showPanel={showPanel} togglePanel={togglePanel}>
+                  <Detail>{feature.detail.detail}</Detail>
+                </PanelSlideIn>
               </>
             )}
           </ContentContainer>
