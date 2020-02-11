@@ -1,6 +1,7 @@
 import React from "react"
 import { Link } from "gatsby"
 import styled from "@emotion/styled"
+import media from "@styles/media"
 
 import FacebookIcon from "@icons/Facebook.Icon"
 import InstagramIcon from "@icons/Instagram.Icon"
@@ -26,8 +27,8 @@ const Footer = () => {
           <a href="mailto: support@gatsby.com" aria-label="Email">
             support@gatsby.com
           </a>
-          <a href="tel: 000-8080-9999" aria-label="Tell">
-            000-8080-9999
+          <a href="tel: 072-2765-9672" aria-label="Tell">
+            072-2765-9672
           </a>
         </Questions>
         <Social>
@@ -85,12 +86,24 @@ const Grid = styled.div`
     [left] minmax(9%, 1fr) repeat(12, [col-start] minmax(0px, 70px) [col-end])
     minmax(9%, 1fr) [right];
   grid-column-gap: 1.5vw;
+
+  ${media.tablet`
+    grid-template-columns:
+    [left] minmax(9%, 1fr) [col-start] 1fr [col-end] minmax(9%, 1fr) [right];
+    grid-template-rows: repeat(3, 1fr);
+    grid-row-gap: 2rem;
+  `}
 `
 const Questions = styled.div`
   grid-column: 1 col-start / 4 col-end;
   text-align: center;
   display: flex;
   flex-direction: column;
+
+  ${media.tablet`
+    grid-column: col-start / col-end;
+    grid-row: 2 / 3;    
+  `}
 
   a {
     color: ${p => p.theme.colors.primary};
@@ -108,6 +121,11 @@ const Social = styled.div`
 
   display: flex;
   flex-direction: column;
+
+  ${media.tablet`
+    grid-column: col-start / col-end;
+    grid-row: 3 / 4;    
+  `}
 `
 
 const SNS = styled.div`
@@ -138,6 +156,11 @@ const Nav = styled.ul`
   grid-column: 9 col-start / 12 col-end;
   display: flex;
   flex-direction: column;
+
+  ${media.tablet`
+    grid-column: col-start / col-end;
+    grid-row: 1 / 2;    
+  `}
 `
 
 const NavItem = styled.li`

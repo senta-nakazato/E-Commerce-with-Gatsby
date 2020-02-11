@@ -3,6 +3,7 @@ import { Link, useStaticQuery, graphql } from "gatsby"
 
 import GatsbyImage from "gatsby-image"
 import styled from "@emotion/styled"
+import media from "@styles/media"
 
 import { formatPrice } from "@utils/index"
 
@@ -82,10 +83,19 @@ const ImageContainer = styled.div`
   &:hover + div .action-link {
     transform: translateX(1.2rem);
   }
+
+  ${media.phablet`
+    grid-column: 1 col-start / 12 col-end;
+    height: 16rem;
+  `}
 `
 
 const Info = styled.div`
   grid-column: 7 col-start / 12 col-end;
+
+  ${media.phablet`
+    grid-column: 1 col-start / 12 col-end;
+  `}
 `
 
 const Header = styled.div`
@@ -95,6 +105,11 @@ const Header = styled.div`
   &:hover + .action-link {
     transform: translateX(1.2rem);
   }
+
+  ${media.phablet`
+  margin-bottom: 8px;
+
+  `}
 `
 
 const Heading = styled.h2`
@@ -102,6 +117,11 @@ const Heading = styled.h2`
   font-weight: 300;
   margin-bottom: 2rem;
   text-transform: uppercase;
+
+  ${media.phablet`
+  font-size: 2.4rem;
+    margin-bottom: 8px;
+  `}
 `
 
 const Description = styled.p`

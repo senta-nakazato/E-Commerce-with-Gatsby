@@ -1,12 +1,12 @@
-import React, { useContext, useState } from "react"
-import { graphql, useStaticQuery } from "gatsby"
+import React, { useState } from "react"
 import GatsbyImage from "gatsby-image"
-import { css } from "@emotion/core"
 import styled from "@emotion/styled"
+import media from "@styles/media"
 
 import AddIcon from "@icons/Add.Icon"
 import { ParallaxBox } from "@components/ParallaxBox"
 import PanelSlideIn from "@components/Panel/Panel.SlideIn"
+// import MediaQuery from "@components/MediaQuery"
 
 const ProductFeatures = ({ productFeatures }) => {
   const [showPanel, setShowPanel] = useState(false)
@@ -31,16 +31,18 @@ const ProductFeatures = ({ productFeatures }) => {
                 __html: feature.description.description,
               }}
             />
-            {feature.detail && (
-              <>
-                <button onClick={() => togglePanel(!showPanel)}>
-                  <AddIcon />
-                </button>
-                <PanelSlideIn showPanel={showPanel} togglePanel={togglePanel}>
-                  <Detail>{feature.detail.detail}</Detail>
-                </PanelSlideIn>
-              </>
-            )}
+            <MediaQuery>
+              {feature.detail && (
+                <>
+                  <button onClick={() => togglePanel(!showPanel)}>
+                    <AddIcon />
+                  </button>
+                  <PanelSlideIn showPanel={showPanel} togglePanel={togglePanel}>
+                    <Detail>{feature.detail.detail}</Detail>
+                  </PanelSlideIn>
+                </>
+              )}
+            </MediaQuery>
           </ContentContainer>
         </Wrapper>
       ))}
@@ -54,6 +56,14 @@ const Section = styled.section`
   width: 100%;
   min-height: calc(100vh - 6rem);
   position: relative;
+
+  ${media.desktop`
+    margin-top: 20rem;
+  `}
+
+  ${media.tablet`
+    margin-top: 12rem;
+  `}
 `
 
 const Wrapper = styled.div`
@@ -67,19 +77,43 @@ const Wrapper = styled.div`
 
   &:nth-child(even) {
     flex-flow: row-reverse;
+
+    ${media.desktop`
+    flex-direction: column;
+  `}
   }
+
+  ${media.desktop`
+    flex-direction: column;
+    padding: 4rem 0;
+  `}
 `
 
 const ImageContainer = styled.div`
   height: calc(100vh - 12rem);
   width: 50vw;
   overflow: hidden;
+
+  ${media.desktop`
+    width: 80vw;
+    height: 40rem;
+  `}
+
+  ${media.tablet`
+    height: 24rem;
+  `}
 `
 
 const ContentContainer = styled.div`
   padding: 4rem 0rem;
   text-align: center;
   width: 30rem;
+`
+
+const MediaQuery = styled.div`
+  ${media.tablet`
+    display: none;
+  `}
 `
 
 const Image = styled(GatsbyImage)`

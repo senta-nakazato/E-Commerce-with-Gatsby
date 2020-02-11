@@ -25,6 +25,7 @@
     "gatsby-source-stripe": "^3.0.4",
     "gatsby-transformer-sharp": "^2.3.1",
     "global": "^4.4.0",
+    "lodash.debounce": "^4.0.8",
     "netlify-cli": "2.11.13",
     "netlify-lambda": "^1.6.3",
     "prop-types": "^15.7.2",

@@ -61,6 +61,11 @@ const ProductContainer = styled.div`
   ${p => p.index === 0 && `grid-column: 1 col-start / 7 col-end;`};
   ${p => p.index === 1 && `grid-column: 5 col-start / 11 col-end;`};
   ${p => p.index === 2 && `grid-column: 2 col-start / 8 col-end;`};
+
+  ${media.phablet`
+    grid-column: col-start / col-end;
+    padding-bottom: 12rem;
+  `}
 `
 
 const Wrapper = styled.div`
@@ -83,6 +88,10 @@ const Heading = styled.h3`
   letter-spacing: 1px;
   text-transform: uppercase;
   text-align: center;
+
+  ${media.phablet`
+     font-size: 18px;
+  `}
 `
 
 const Grid = styled.div`
@@ -92,6 +101,10 @@ const Grid = styled.div`
     minmax(9%, 1fr) [right];
   grid-column-gap: 1.5vw;
   overflow: hidden;
+
+  ${media.phablet`
+    grid-template-columns: minmax(1fr, 9%) [col-start] 1fr [col-end] minmax(1fr, 9%);
+  `};
 `
 
 const Section = styled.section`

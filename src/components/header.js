@@ -1,13 +1,14 @@
-import React, { useEffect, useState, useContext } from "react"
+import React, { useState, useContext } from "react"
 import { useSelector } from "react-redux"
 import { Link, navigate } from "gatsby"
 import styled from "@emotion/styled"
 import media from "@styles/media"
 
 import ShoppingBagIcon from "@icons/ShoppingBag.Icon"
+import ArrowLeftIcon from "@icons/ArrowLeft.Icon"
 import Sticky from "@components/Sticky"
 import { ShoppingBagContext } from "@components/ShoppingBag/ShoppingBag.Context"
-import ArrowLeftIcon from "@icons/ArrowLeft.Icon"
+import NavMobile from "@components/Nav/Nav.Mobile"
 
 const navLinks = [
   { to: "/products", text: "SHOP ALL" },
@@ -31,7 +32,7 @@ const Header = ({ location, checkout }) => {
           <>
             <BackButton onClick={() => window.history.back()}>
               <ArrowLeftIcon />
-              <span>BACK</span> TO CART
+              BACK <span className="only-desktop">TO CART</span>
             </BackButton>
             <Logo>
               <Link to="/">Gatsby</Link>
@@ -39,6 +40,9 @@ const Header = ({ location, checkout }) => {
           </>
         ) : (
           <>
+            <MediaQuery>
+              <NavMobile />
+            </MediaQuery>
             <Nav>
               {navLinks.map(nav => (
                 <NavItem key={nav.to}>
@@ -86,12 +90,18 @@ const BackButton = styled.button`
   display: flex;
   align-items: center;
   text-transform: uppercase;
+
+  .only-desktop {
+    ${media.desktop`
+      display: none;
+    `}
+  }
 `
 const Nav = styled.ul`
   display: flex;
   justify-content: space-between;
 
-  ${media.phablet`
+  ${media.tablet`
     display: none;
   `}
 `
@@ -132,4 +142,12 @@ const Quantity = styled.div`
   top: 64%;
   left: 50%;
   transform: translate(-50%, -50%);
+`
+
+const MediaQuery = styled.div`
+  display: none;
+
+  ${media.tablet` 
+    display: block;
+  `};
 `

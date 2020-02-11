@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react"
 import { css } from "@emotion/core"
 import styled from "@emotion/styled"
 import { useDispatch } from "react-redux"
+import media from "@styles/media"
 
 import { addToCart } from "@redux/actions"
 
@@ -23,15 +24,17 @@ const Action = ({ product }) => {
 
   return (
     <Frame>
-      <Quantity>
-        <CountButton onClick={() => setCount(count - 1)} disable={count < 2}>
-          <MinusIcon />
-        </CountButton>
-        <Number value={count} />
-        <CountButton onClick={() => setCount(count + 1)}>
-          <PlusIcon />
-        </CountButton>
-      </Quantity>
+      <MediaQuery>
+        <Quantity>
+          <CountButton onClick={() => setCount(count - 1)} disable={count < 2}>
+            <MinusIcon />
+          </CountButton>
+          <Number value={count} />
+          <CountButton onClick={() => setCount(count + 1)}>
+            <PlusIcon />
+          </CountButton>
+        </Quantity>
+      </MediaQuery>
 
       <ActionButton onClick={() => addToBag(product)}>ADD TO BAG</ActionButton>
     </Frame>
@@ -76,6 +79,10 @@ const ActionButton = styled.button`
   width: 50%;
   ${p => p.theme.transitions.opacity};
 
+  ${media.phablet`
+     width: 100%;
+  `};
+
   &:hover {
     opacity: 0.8;
   }
@@ -89,4 +96,10 @@ const Quantity = styled.div`
   color: rgba(0, 0, 0, 0);
   background-color: transparent;
   border: 1px solid rgb(8, 4, 0);
+`
+
+const MediaQuery = styled.div`
+  ${media.phablet`
+    display: none;
+  `};
 `

@@ -86,6 +86,10 @@ export default PanelSlideIn
 const Frame = styled(motion.div)`
   position: relative;
   z-index: 1100;
+
+  ${media.tablet`
+     display: none;
+  `}
 `
 
 const Mask = styled.div`
@@ -133,8 +137,4 @@ const CloseContainer = styled.button`
   &[data-a11y="true"]:focus {
     border: 2px solid ${p => p.theme.colors.purple};
   }
-`
-
-const ShoppingBagWrapper = styled.div`
-  width: 32rem;
 `

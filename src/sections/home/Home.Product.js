@@ -3,6 +3,7 @@ import { Link as GatsbyLink } from "gatsby"
 
 import GatsbyImage from "gatsby-image"
 import styled from "@emotion/styled"
+import media from "@styles/media"
 
 import { formatPrice, slugify } from "@utils/index"
 
@@ -37,23 +38,46 @@ const Link = styled(GatsbyLink)`
 const Image = styled(GatsbyImage)`
   height: 50rem;
   width: 50rem;
+
+  ${media.desktop`
+   height: 35rem;
+    width: 35rem;
+  `}
+
+  ${media.phablet`
+   height: 30rem;
+    width: 80vw;
+  `}
 `
 const Name = styled.h2`
   font-size: 2.5rem;
   font-weight: 400;
   margin-top: 2rem;
   margin-right: 2rem;
+
+  ${media.phablet`
+     font-size: 2.2rem;
+     width: 70%;
+  `}
 `
 const Price = styled.span`
   color: ${p => p.theme.colors.grey};
   font-size: 16px;
   font-weight: 300;
   letter-spacing: 1px;
+
+  ${media.phablet`
+     width: 30%;
+  `}
 `
 const Header = styled.div`
   display: flex;
   align-items: baseline;
   margin-bottom: 1.2rem;
+
+  ${media.phablet`
+     width: 80vw;
+  `}
 `
 const Text = styled.span`
   font-size: 1.2rem;
@@ -62,7 +86,14 @@ const Text = styled.span`
   text-transform: uppercase;
   text-align: center;
   margin-right: 8px;
+  white-space: nowrap;
 `
 const ActionLink = styled.button`
   transition: all 0.2s var(--ease-in-out-quad);
+  display: flex;
+  margin-top: 2rem;
+
+  ${media.phablet`
+     width: auto;
+  `}
 `

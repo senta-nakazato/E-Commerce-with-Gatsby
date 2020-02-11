@@ -2,6 +2,7 @@ import React from "react"
 import { Link, graphql, useStaticQuery } from "gatsby"
 import GatsbyImage from "gatsby-image"
 import styled from "@emotion/styled"
+import media from "@styles/media"
 
 import Button from "@components/Button"
 
@@ -54,6 +55,10 @@ const Section = styled.section`
 const HeroImage = styled(GatsbyImage)`
   height: 90vh;
   width: 100%;
+
+  ${media.tablet`
+    height: 60vh;
+  `}
 `
 
 const Container = styled.div`
@@ -65,6 +70,12 @@ const Container = styled.div`
   flex-direction: column;
   text-align: left;
   max-width: 60rem;
+
+  ${media.tablet`
+    position: absolute;
+    left: 10%;
+    bottom: 20%;
+  `}
 `
 
 const Headline = styled.h1`
@@ -76,6 +87,12 @@ const Headline = styled.h1`
   letter-spacing: 0.6px;
   line-height: 75px;
   margin-bottom: 3.2rem;
+
+  ${media.tablet`
+    font-size: 4rem;
+    font-weight: 600;
+    margin-bottom: 0rem;
+  `}
 `
 
 const SubHeadline = styled.p`
@@ -88,4 +105,11 @@ const SubHeadline = styled.p`
   line-height: 1.63;
   margin-bottom: 3.2rem;
   width: 40rem;
+
+  ${media.tablet`
+    font-size: 2.4rem;
+     line-height: 1.2;
+     margin-bottom: 3.2rem;
+     width: 90%;
+  `}
 `

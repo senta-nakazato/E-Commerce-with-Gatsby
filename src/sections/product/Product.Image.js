@@ -1,7 +1,6 @@
 import React, { useState } from "react"
 import GatsbyImage from "gatsby-image"
 import styled from "@emotion/styled"
-
 import media from "@styles/media"
 
 const ProductImage = ({ images }) => {
@@ -36,13 +35,19 @@ export default ProductImage
 const Section = styled.section`
   grid-column: left / 6 col-end;
 
-  ${media.desktop` width: 100px; `};
+  ${media.desktop`
+    grid-column: 1 col-start / 12 col-end;
+  `};
 `
 
 const Preview = styled.div`
   position: relative;
   display: flex;
   height: 55rem;
+
+  ${media.tablet`
+    height: 30rem;
+  `};
   /* overflow: hidden; */
 `
 const Wrapper = styled.div`
@@ -57,6 +62,10 @@ const Wrapper = styled.div`
 const PreviewImage = styled(GatsbyImage)`
   width: 100%;
   height: 55rem;
+
+  ${media.tablet`
+    height: 30rem;
+  `};
 `
 
 const Thumbnail = styled.div`
@@ -65,6 +74,10 @@ const Thumbnail = styled.div`
   margin-top: 1.2rem;
   display: flex;
   justify-content: center;
+
+  ${media.desktop`
+    margin-bottom: 4rem;
+  `};
 `
 
 const ImageFrame = styled.div`

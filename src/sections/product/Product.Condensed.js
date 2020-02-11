@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react"
 import { useDispatch } from "react-redux"
 import styled from "@emotion/styled"
+import media from "@styles/media"
 import { formatPrice, useScrollPosition } from "@utils"
 
 import { addToCart } from "@redux/actions"
@@ -64,6 +65,10 @@ const Section = styled.header`
   border-bottom: 1px solid rgb(224, 224, 224);
 
   ${p => p.isShow && `display: flex;`};
+
+  ${media.tablet`
+    display: none;
+  `};
 `
 
 const ProductInfo = styled.div`
@@ -77,6 +82,10 @@ const Name = styled.h2`
   font-weight: 400;
   margin-right: 8px;
   text-transform: uppercase;
+
+  ${media.desktop`
+     font-size: 2rem;
+  `};
 `
 const Price = styled.p`
   font-size: 1.6rem;
@@ -87,6 +96,12 @@ const Text = styled.p`
   letter-spacing: 1px;
   padding-right: 2rem;
   width: 16rem;
+
+  ${media.desktop`
+     font-size: 1rem;
+  width: 12rem;
+
+  `};
 `
 
 const ColorContainer = styled.div`

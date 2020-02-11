@@ -119,16 +119,17 @@ const SlideIn = styled(motion.div)`
   top: 0;
   right: 0;
   z-index: 1500;
+
+  ${media.phablet`
+    width: 100vw;
+    padding: 8rem 2rem;
+  `}
 `
 
 const CloseContainer = styled.button`
   position: absolute;
   top: 2rem;
   left: 2rem;
-
-  ${media.tablet`
-    display: none;
-  `}
 
   &:hover::after {
     background: rgba(0, 0, 0, 0.03);

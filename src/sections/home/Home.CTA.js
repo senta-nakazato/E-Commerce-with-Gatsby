@@ -1,7 +1,7 @@
 import React from "react"
 import { Link } from "gatsby"
 import styled from "@emotion/styled"
-import { jsx } from "theme-ui"
+import media from "@styles/media"
 
 import Button from "@components/Button"
 
@@ -93,4 +93,8 @@ const Container = styled.div`
   margin: 25rem 0;
   position: relative;
   z-index: 300;
+
+  ${media.phablet`
+    margin: 16rem 0;
+  `}
 `

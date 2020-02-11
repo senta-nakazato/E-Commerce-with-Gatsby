@@ -1,4 +1,6 @@
-import { useRef, useEffect } from "react"
+import { useRef, useEffect, useState } from "react"
+import theme from "../gatsby-plugin-theme-ui"
+
 import throttle from "lodash/throttle"
 
 export function formatPrice(price, currency = "JPY") {
@@ -85,4 +87,71 @@ export const scrollable = action => {
     document.body.style.overflow = "hidden"
     document.body.style.height = "100%"
   }
+}
+
+// https://dev.to/gabe_ragland/debouncing-with-react-hooks-jci
+
+export const useDebounce = (value, delay) => {
+  const [debouncedValue, setDebouncedValue] = useState(value)
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedValue(value)
+    }, delay)
+
+    return () => {
+      clearTimeout(handler)
+    }
+  }, [value])
+
+  return debouncedValue
+}
+
+export const getBreakpointFromTheme = name => {
+  const breakpoint = theme.breakpoints.find(([label, _]) => label === name)
+  return breakpoint[1]
+}
+
+export const getWindowDimensions = () => {
+  if (typeof window !== "undefined") {
+    const width =
+      window.innerWidth ||
+      document.documentElement.clientWidth ||
+      document.body.clientWidth
+
+    const height =
+      window.innerHeight ||
+      document.documentElement.clientHeight ||
+      document.body.clientHeight
+
+    return {
+      height,
+      width,
+    }
+  }
+
+  return {
+    width: 0,
+    height: 0,
+  }
+}
+
+export function useResize() {
+  const [dimensions, setDimensions] = useState({ width: 1280, height: 900 })
+
+  useEffect(() => {
+    setDimensions(getWindowDimensions())
+
+    const handleResize = throttle(
+      () => setDimensions(getWindowDimensions()),
+      100
+    )
+
+    window.addEventListener("resize", handleResize)
+    return () => {
+      window.removeEventListener("resize", handleResize)
+    }
+  }, [])
+
+  return dimensions
 }

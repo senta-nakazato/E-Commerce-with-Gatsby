@@ -6,6 +6,7 @@ import store from "@redux/store"
 import { Global } from "@emotion/core"
 import styled from "@emotion/styled"
 import { globalStyles } from "@styles"
+import media from "@styles/media"
 
 import CheckoutReview from "@sections/checkout/Checkout.Review"
 import CheckoutPayment from "@sections/checkout/Checkout.Payment"
@@ -36,4 +37,8 @@ const Wrapper = styled.div`
   width: 100%;
   padding-top: 6rem;
   display: flex;
+
+  @media (max-width: 800px) {
+    flex-direction: column;
+  }
 `

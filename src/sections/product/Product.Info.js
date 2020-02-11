@@ -31,6 +31,10 @@ export default ProductInfo
 
 const Section = styled.section`
   grid-column: 8 col-start / 12 col-end;
+
+  ${media.desktop`
+    grid-column: 1 col-start / 12 col-end;
+  `};
 `
 
 const Header = styled.header`

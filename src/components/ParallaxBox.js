@@ -5,6 +5,7 @@ import {
   useViewportScroll,
   useTransform,
 } from "framer-motion"
+import { getBreakpointFromTheme, useResize, getWindowDimensions } from "@utils"
 
 export const ParallaxBox = ({
   children,
@@ -14,9 +15,12 @@ export const ParallaxBox = ({
 }) => {
   const { scrollY } = useViewportScroll()
   const ref = useRef()
+  const breakpoint = getBreakpointFromTheme("desktop")
+  const screenSize = useResize().width
   const [elementTop, setElementTop] = useState(0)
   const [elementBottom, setElementBottom] = useState(0)
   const [clientHeight, setClientHeight] = useState(0)
+
   useEffect(() => {
     if (!ref.current) return
 
@@ -52,10 +56,15 @@ export const ParallaxBox = ({
     elementBottom + clientHeight,
   ]
   const opacity = useTransform(scrollY, yOpacityRange, opacityRange)
+  console.log("screenSize", screenSize)
+  console.log("breakpoint", breakpoint)
+  console.log("ScreenSize > breakpoint", screenSize > breakpoint)
 
-  return (
+  return screenSize > breakpoint ? (
     <motion.div ref={ref} initial={{ y: 0 }} style={{ y, opacity }} {...rest}>
       {children}
     </motion.div>
+  ) : (
+    <div ref={ref}>{children}</div>
   )
 }

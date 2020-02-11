@@ -42,6 +42,12 @@ const Section = styled.section`
   flex-basis: 50%;
   padding: 4rem;
   margin: 0 auto;
+
+  @media (max-width: 800px) {
+    width: 100%;
+    max-width: 40rem;
+    padding: 8rem 2rem;
+  }
 `
 
 const Overlay = styled.div`

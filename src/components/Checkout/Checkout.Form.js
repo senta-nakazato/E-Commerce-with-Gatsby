@@ -4,9 +4,15 @@ import { css } from "@emotion/core"
 import styled from "@emotion/styled"
 import { CardElement, injectStripe } from "react-stripe-elements"
 import uuidv1 from "uuid/v1"
+import debounce from "lodash/debounce"
+import throttle from "lodash/throttle"
+import { jsx } from "gatsby-plugin-theme-ui"
 import media from "@styles/media"
+import { useDebounce } from "@utils"
 
-const CheckoutForm = ({ stripe, toggleOverlay }) => {
+const CheckoutForm = props => {
+  const { stripe, toggleOverlay } = props
+
   const [address, setAddress] = useState("")
   const [address2, setAddress2] = useState("")
   const [city, setCity] = useState("")
@@ -47,16 +53,15 @@ const CheckoutForm = ({ stripe, toggleOverlay }) => {
     }
   }
 
-  const handlePostcode = async event => {
-    setPostalcode(event.target.value)
-
+  const handlePostcode = postcode => {
+    setPostalcode(postcode)
     try {
       const headers = {
         apikey: process.env.GATSBY_POSTCODE_API_KEY,
       }
 
-      await fetch(
-        `https://apis.postcode-jp.com/api/v3/postcodes?postcode=${postalcode}&startWith=true&normalize=true&general=true&office=true`,
+      fetch(
+        `https://apis.postcode-jp.com/api/v3/postcodes?postcode=${postcode}&startWith=true&normalize=true&general=true&office=true`,
         {
           method: "GET",
           headers,
@@ -68,7 +73,7 @@ const CheckoutForm = ({ stripe, toggleOverlay }) => {
             if (JSON.parse(text).size > 0) {
               setCity(addressData.city)
               setPrefecture(addressData.pref)
-              return setAddress(addressData.town)
+              setAddress(addressData.town)
             } else {
               setCity("")
               setPrefecture("")
@@ -132,7 +137,13 @@ const CheckoutForm = ({ stripe, toggleOverlay }) => {
     }
   }
 
+  const debouncedPostcode = useDebounce(postalcode, 500)
+
   useEffect(() => {
+    if (debouncedPostcode) {
+      handlePostcode(debouncedPostcode)
+    }
+
     const inputs = document.querySelectorAll("input")
     inputs.forEach(input => {
       input.addEventListener("focus", () => {
@@ -149,7 +160,7 @@ const CheckoutForm = ({ stripe, toggleOverlay }) => {
         }
       })
     })
-  }, [postalcode])
+  }, [debouncedPostcode])
 
   return (
     <Container>
@@ -163,6 +174,7 @@ const CheckoutForm = ({ stripe, toggleOverlay }) => {
               type="text"
               placeholder="渡邉　康太郎"
               onChange={event => setName(event.target.value)}
+              required
             />
           </Row>
           <Row>
@@ -172,6 +184,7 @@ const CheckoutForm = ({ stripe, toggleOverlay }) => {
               type="text"
               placeholder="test@gmail.com"
               onChange={event => setEmail(event.target.value)}
+              required
             />
           </Row>
         </Field>
@@ -184,8 +197,8 @@ const CheckoutForm = ({ stripe, toggleOverlay }) => {
               id="postalcode"
               type="text"
               placeholder="112-3200"
-              onChange={handlePostcode}
-              // onChange={event => setPostalcode(event.target.value)}
+              // onChange={handlePostcode}
+              onChange={event => setPostalcode(event.target.value)}
             />
           </Row>
           <Row>
@@ -234,6 +247,17 @@ const CheckoutForm = ({ stripe, toggleOverlay }) => {
         </Field>
 
         <FieldHeading>お支払い情報</FieldHeading>
+        <p
+          {...props}
+          style={{
+            color: "#332e54",
+            fontSize: "12px",
+            marginBottom: "8px",
+            whiteSpace: "pre-wrap",
+          }}
+        >
+          ※4242 4242 4242 4242 でお支払いできます。
+        </p>
         <Field>
           <Row>
             <CardElement {...createOptions()} id="card" className="empty" />
@@ -365,6 +389,9 @@ const Input = styled.input`
   &.invalid + ${Label} {
     color: #ffa27b;
   }
+  &:invalid {
+    color: red;
+  }
 
   &.focused + ${Label} + ${BaseLine} {
     background-color: red;
@@ -422,7 +449,8 @@ const Container = styled.div`
   /* 
   input:-internal-autofill-selected {
     background: red !important;
-  }import { useSelector } from 'react-redux';
+  }
+
 
 
   input::placeholder {

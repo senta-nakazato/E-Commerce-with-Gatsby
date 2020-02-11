@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { navigate, Link } from "gatsby"
 import GatsbyImage from "gatsby-image"
 import styled from "@emotion/styled"
+import media from "@styles/media"
 
 import { formatPrice } from "@utils"
 import { removeFromCart } from "@redux/actions"
@@ -111,6 +112,10 @@ const Frame = styled.div`
   height: 100%;
   width: 32rem;
   position: relative;
+
+  ${media.phablet`
+    width: 100%;
+  `}
 `
 const Empty = styled.div`
   text-align: center;

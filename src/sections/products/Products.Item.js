@@ -40,6 +40,19 @@ const Frame = styled.div`
 const Image = styled(GatsbyImage)`
   height: 40rem;
   width: 100%;
+
+  ${media.desktop`
+    height: 48rem;
+    margin: 0 auto;
+  `}
+
+  ${media.tablet`
+    width: 80vw;  
+  `}
+
+  ${media.phablet`
+    height: 40rem;
+  `}
 `
 
 const Name = styled.h1`

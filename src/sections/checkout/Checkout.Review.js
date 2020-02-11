@@ -2,6 +2,7 @@ import React from "react"
 import { useSelector } from "react-redux"
 import GatsbyImage from "gatsby-image"
 import styled from "@emotion/styled"
+import media from "@styles/media"
 
 import { formatPrice } from "@utils"
 
@@ -81,6 +82,11 @@ const Section = styled.section`
   padding: 4rem;
   padding-bottom: 6rem;
   margin: 0 auto;
+
+  @media (max-width: 800px) {
+    width: 100%;
+    padding: 8rem 2rem;
+  }
 `
 
 const Frame = styled.div`
@@ -89,6 +95,11 @@ const Frame = styled.div`
   min-width: 34rem;
   margin: 0 auto;
   position: relative;
+
+  @media (max-width: 800px) {
+    min-width: 30rem;
+    max-width: 36rem;
+  }
 `
 
 const ProductList = styled.ul`
@@ -161,6 +172,11 @@ const Summary = styled.table`
   margin-top: auto;
   height: auto;
   width: 100%;
+
+  @media (max-width: 800px) {
+    position: relative;
+  }
+
   tr {
     display: flex;
     flex-direction: row;
